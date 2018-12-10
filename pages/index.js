@@ -1,5 +1,13 @@
-import Items from 'Components/Items'
+import Link from 'next/link'
 
-const Home = props => <Items data={props} />
+import Home from './home'
 
-export default Home
+import '../style.css'
+
+const Index = () => (
+  <>
+    <Home />
+  </>
+)
+
+export default Index

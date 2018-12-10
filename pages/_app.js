@@ -1,18 +1,27 @@
 import App, {Container} from 'next/app'
+import Head from 'next/head'
 import {ApolloProvider} from 'react-apollo'
-import withData from 'Lib/withData'
+
+import withApollo from 'Lib/withApollo'
+import Navigator from './navigator'
 
 class MyApp extends App {
   render() {
-    const {Component, apollo} = this.props
+    const {Component, apolloClient, pageProps} = this.props
     return (
-      <Container>
-        <ApolloProvider client={apollo}>
-          <Component />
-        </ApolloProvider>
-      </Container>
+      <ApolloProvider client={apolloClient}>
+        <Head>
+          <title>App</title>
+          <link
+            rel="stylesheet"
+            href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css"
+          />
+        </Head>
+        <Navigator />
+        <Component {...pageProps} />
+      </ApolloProvider>
     )
   }
 }
 
-export default withData(MyApp)
+export default withApollo(MyApp)

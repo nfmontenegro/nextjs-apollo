@@ -11,15 +11,21 @@
   "author": "Nicolás Flores Montenegro",
   "license": "ISC",
   "dependencies": {
+    "@zeit/next-css": "^1.0.1",
     "apollo-boost": "^0.1.22",
+    "apollo-link-context": "^1.0.10",
     "babel-plugin-module-resolver": "^3.1.1",
+    "cookie": "^0.3.1",
     "graphql": "^14.0.2",
+    "isomorphic-unfetch": "^3.0.0",
     "next": "^7.0.2",
     "next-with-apollo": "^3.3.0",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "react-apollo": "^2.3.2",
-    "react-dom": "^16.6.3"
+    "react-dom": "^16.6.3",
+    "semantic-ui-react": "^0.84.0",
+    "styled-components": "^4.1.2"
   },
   "babel": {
     "presets": [
