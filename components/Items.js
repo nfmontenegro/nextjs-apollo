@@ -26,7 +26,6 @@ const ALL_USERS = gql`
 
 class Items extends React.Component {
   render() {
-    console.log('Props item:', this.props)
     return (
       <>
         <Query query={ALL_USERS}>
