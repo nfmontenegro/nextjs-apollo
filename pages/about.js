@@ -1,3 +1,5 @@
-const About = () => <div>About Page</div>
+import PleaseSignin from 'Components/PleaseSignin'
+
+const About = () => <PleaseSignin>About Page</PleaseSignin>
 
 export default About

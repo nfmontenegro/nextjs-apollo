@@ -1,23 +1,15 @@
 import React from 'react'
 import {Button, Container, Form, Message} from 'semantic-ui-react'
-import {Mutation} from 'react-apollo'
+import {Mutation, withApollo} from 'react-apollo'
+import Router from 'next/router'
 import gql from 'graphql-tag'
+import cookie from 'cookie'
 
 import ContentForm from './styles/ContentForm'
 
-const SIGNUP_MUTATION = gql`
-  mutation SIGNUP_MUTATION(
-    $email: String!
-    $password: String!
-    $name: String!
-    $lastname: String!
-  ) {
-    signup(
-      email: $email
-      password: $password
-      lastname: $lastname
-      name: $name
-    ) {
+const SIGNIN_MUTATION = gql`
+  mutation SIGNIN_MUTATION($email: String!, $password: String!) {
+    signin(email: $email, password: $password) {
       token
       user {
         id
@@ -26,7 +18,7 @@ const SIGNUP_MUTATION = gql`
   }
 `
 
-class Signup extends React.Component {
+class Signin extends React.Component {
   state = {
     name: '',
     lastname: '',
@@ -40,15 +32,23 @@ class Signup extends React.Component {
 
   handleChange = (e, {name, value}) => this.setState({[name]: value})
 
-  handleSubmit = async (e, signup) => {
+  handleSubmit = async (e, signin) => {
     try {
       e.preventDefault()
       this.setState({loading: true})
-      await signup(this.state)
-      this.setState({loading: false, completed: true})
-      setTimeout(() => {
-        this.setState({completed: false})
-      }, 3000)
+      const response = await signin(this.state)
+
+      // Store the token in localstorage
+      localStorage.setItem('token', response.data.signin.token)
+      this.setState({loading: false, completed: true}, () => {
+        setTimeout(() => {
+          this.setState({completed: false})
+
+          // Force a reload of all the current queries now that the user is
+          // logged in
+          Router.push('/')
+        }, 4000)
+      })
     } catch (err) {
       this.setState({message: err.message, error: true, loading: false})
       setTimeout(() => {
@@ -60,39 +60,19 @@ class Signup extends React.Component {
   render() {
     return (
       <Mutation
-        mutation={SIGNUP_MUTATION}
+        mutation={SIGNIN_MUTATION}
         variables={this.state}
-        onCompleted={() =>
-          this.setState({name: '', lastname: '', email: '', password: ''})
-        }
+        onCompleted={() => this.setState({email: '', password: ''})}
       >
-        {(signup, {error, loading}) => (
+        {(signin, {error, loading}) => (
           <Container>
             <ContentForm>
               <Form
                 method="POST"
                 success={this.state.completed}
                 error={this.state.error}
-                onSubmit={async e => this.handleSubmit(e, signup)}
+                onSubmit={async e => this.handleSubmit(e, signin)}
               >
-                <Form.Group>
-                  <Form.Input
-                    label="First name"
-                    placeholder="First Name"
-                    width={12}
-                    name="name"
-                    onChange={this.handleChange}
-                    value={this.state.name}
-                  />
-                  <Form.Input
-                    label="Last name"
-                    placeholder="Last Name"
-                    width={12}
-                    name="lastname"
-                    onChange={this.handleChange}
-                    value={this.state.lastname}
-                  />
-                </Form.Group>
                 <Form.Group>
                   <Form.Input
                     label="Email"
@@ -135,4 +115,4 @@ class Signup extends React.Component {
   }
 }
 
-export default Signup
+export default withApollo(Signin)
