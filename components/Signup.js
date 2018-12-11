@@ -1,4 +1,5 @@
 import React from 'react'
+import Router from 'next/router'
 import {Button, Container, Form, Message} from 'semantic-ui-react'
 import {Mutation} from 'react-apollo'
 import gql from 'graphql-tag'
@@ -48,6 +49,7 @@ class Signup extends React.Component {
       this.setState({loading: false, completed: true})
       setTimeout(() => {
         this.setState({completed: false})
+        Router.push('/login')
       }, 3000)
     } catch (err) {
       this.setState({message: err.message, error: true, loading: false})
@@ -59,17 +61,12 @@ class Signup extends React.Component {
 
   render() {
     return (
-      <Mutation
-        mutation={SIGNUP_MUTATION}
-        variables={this.state}
-        onCompleted={() =>
-          this.setState({name: '', lastname: '', email: '', password: ''})
-        }
-      >
+      <Mutation mutation={SIGNUP_MUTATION} variables={this.state}>
         {(signup, {error, loading}) => (
           <Container>
             <ContentForm>
               <Form
+                id="form"
                 method="POST"
                 success={this.state.completed}
                 error={this.state.error}

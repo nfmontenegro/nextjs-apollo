@@ -1,9 +1,7 @@
 import React from 'react'
 import {Button, Container, Form, Message} from 'semantic-ui-react'
 import {Mutation, withApollo} from 'react-apollo'
-import Router from 'next/router'
 import gql from 'graphql-tag'
-import cookie from 'cookie'
 
 import ContentForm from './styles/ContentForm'
 
@@ -20,8 +18,6 @@ const SIGNIN_MUTATION = gql`
 
 class Signin extends React.Component {
   state = {
-    name: '',
-    lastname: '',
     email: '',
     password: '',
     message: '',
@@ -46,8 +42,10 @@ class Signin extends React.Component {
 
           // Force a reload of all the current queries now that the user is
           // logged in
-          Router.push('/')
-        }, 4000)
+          this.props.client.cache.reset().then(() => {
+            window.location.href = '/'
+          })
+        }, 500)
       })
     } catch (err) {
       this.setState({message: err.message, error: true, loading: false})
@@ -62,12 +60,13 @@ class Signin extends React.Component {
       <Mutation
         mutation={SIGNIN_MUTATION}
         variables={this.state}
-        onCompleted={() => this.setState({email: '', password: ''})}
+        onCompleted={() => document.getElementById('form').reset()}
       >
         {(signin, {error, loading}) => (
           <Container>
             <ContentForm>
               <Form
+                id="form"
                 method="POST"
                 success={this.state.completed}
                 error={this.state.error}

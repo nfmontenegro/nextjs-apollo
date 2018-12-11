@@ -8,8 +8,17 @@ import './styles.scss'
 import apolloClient from 'Lib/apolloClient'
 
 class MyApp extends App {
+  static async getInitialProps({Component, ctx}) {
+    let pageProps = {}
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps(ctx)
+    }
+
+    return {pageProps}
+  }
+
   render() {
-    const {Component} = this.props
+    const {Component, pageProps} = this.props
 
     return (
       <Container>
@@ -21,9 +30,9 @@ class MyApp extends App {
               href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css"
             />
           </Head>
-          <NProgress color="#29d" />
+          <NProgress color="#29d" spinner={false} />
           <Navigator />
-          <Component />
+          <Component {...pageProps} />
         </ApolloProvider>
       </Container>
     )
