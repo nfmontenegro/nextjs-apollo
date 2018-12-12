@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import localStorage from 'localStorage'
+import AsyncStorage from '@callstack/async-storage'
 import {Image, Menu} from 'semantic-ui-react'
 
 import User from './User'
@@ -34,8 +34,11 @@ const Nav = () => (
                 <div
                   className="item"
                   onClick={() => {
-                    localStorage.removeItem('token')
-                    window.location.href = '/'
+                    AsyncStorage.removeItem('token')
+                      .then(() => {
+                        window.location.href = '/'
+                      })
+                      .catch(() => {})
                   }}
                 >
                   <Link href="/home">

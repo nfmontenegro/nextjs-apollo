@@ -1,7 +1,7 @@
 import React from 'react'
 import {Button, Container, Form, Message} from 'semantic-ui-react'
 import {Mutation, withApollo} from 'react-apollo'
-import localStorage from 'localStorage'
+import AsyncStorage from '@callstack/async-storage'
 import gql from 'graphql-tag'
 
 import {CURRENT_USER_QUERY} from './User'
@@ -23,7 +23,6 @@ class Signin extends React.Component {
     email: '',
     password: '',
     message: '',
-    completed: false,
     error: false
   }
 
@@ -32,21 +31,18 @@ class Signin extends React.Component {
   handleSubmit = async (e, signin) => {
     try {
       e.preventDefault()
+      document.getElementById('form').reset()
       const response = await signin(this.state)
-
       // Store the token in localstorage
-      localStorage.setItem('token', response.data.signin.token)
-      this.setState({completed: true}, () => {
-        setTimeout(() => {
-          this.setState({completed: false})
-
+      AsyncStorage.setItem('token', response.data.signin.token)
+        .then(() => {
           // Force a reload of all the current queries now that the user is
           // logged in
           this.props.client.cache.reset().then(() => {
             window.location.href = '/'
           })
-        }, 500)
-      })
+        })
+        .catch(err => console.log(err))
     } catch (err) {
       this.setState({message: err.message, error: true, loading: false})
       setTimeout(() => {
@@ -68,7 +64,6 @@ class Signin extends React.Component {
               <Form
                 id="form"
                 method="POST"
-                success={this.state.completed}
                 error={this.state.error}
                 loading={loading}
                 onSubmit={e => this.handleSubmit(e, signin)}
@@ -93,11 +88,6 @@ class Signin extends React.Component {
                     value={this.state.password}
                   />
                 </Form.Group>
-                <Message
-                  success
-                  header="Form Completed"
-                  content="You're all signed up for the newsletter"
-                />
                 <Message
                   error
                   header="Forbidden Server"
