@@ -1,17 +1,13 @@
 import Link from 'next/link'
-import {Image, Menu} from 'semantic-ui-react'
 import localStorage from 'localStorage'
+import {Image, Menu} from 'semantic-ui-react'
 
-class Navigator extends React.Component {
-  clearStorage = () => {
-    localStorage.removeItem('token')
-    window.location.href = '/'
-  }
+import User from './User'
 
-  render() {
-    const token = localStorage.getItem('token')
-    return (
-      <>
+const Nav = () => (
+  <User>
+    {({data: {me}}) => {
+      return (
         <Menu fixed="top">
           <Menu.Item>
             <Image size="mini" src="https://react.semantic-ui.com/logo.png" />
@@ -23,21 +19,25 @@ class Navigator extends React.Component {
                 <a>Home</a>
               </Link>
             </div>
-            {token && (
+            {me && (
               <>
                 <div className="item">
                   <Link href="/cart">
                     <a>Cart</a>
                   </Link>
                 </div>
-
                 <div className="item">
                   <Link href="/about">
                     <a>About</a>
                   </Link>
                 </div>
-
-                <div className="item" onClick={this.clearStorage}>
+                <div
+                  className="item"
+                  onClick={() => {
+                    localStorage.removeItem('token')
+                    window.location.href = '/'
+                  }}
+                >
                   <Link href="/home">
                     <a>Log out</a>
                   </Link>
@@ -45,7 +45,7 @@ class Navigator extends React.Component {
               </>
             )}
 
-            {!token && (
+            {!me && (
               <>
                 <div className="item">
                   <Link href="/register">
@@ -61,9 +61,9 @@ class Navigator extends React.Component {
             )}
           </div>
         </Menu>
-      </>
-    )
-  }
-}
+      )
+    }}
+  </User>
+)
 
-export default Navigator
+export default Nav

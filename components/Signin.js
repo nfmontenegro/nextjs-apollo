@@ -1,8 +1,10 @@
 import React from 'react'
 import {Button, Container, Form, Message} from 'semantic-ui-react'
 import {Mutation, withApollo} from 'react-apollo'
+import localStorage from 'localStorage'
 import gql from 'graphql-tag'
 
+import {CURRENT_USER_QUERY} from './User'
 import ContentForm from './styles/ContentForm'
 
 const SIGNIN_MUTATION = gql`
@@ -21,7 +23,6 @@ class Signin extends React.Component {
     email: '',
     password: '',
     message: '',
-    loading: false,
     completed: false,
     error: false
   }
@@ -31,12 +32,11 @@ class Signin extends React.Component {
   handleSubmit = async (e, signin) => {
     try {
       e.preventDefault()
-      this.setState({loading: true})
       const response = await signin(this.state)
 
       // Store the token in localstorage
       localStorage.setItem('token', response.data.signin.token)
-      this.setState({loading: false, completed: true}, () => {
+      this.setState({completed: true}, () => {
         setTimeout(() => {
           this.setState({completed: false})
 
@@ -60,9 +60,9 @@ class Signin extends React.Component {
       <Mutation
         mutation={SIGNIN_MUTATION}
         variables={this.state}
-        onCompleted={() => document.getElementById('form').reset()}
+        refetchQueries={[{query: CURRENT_USER_QUERY}]}
       >
-        {(signin, {error, loading}) => (
+        {(signin, {loading}) => (
           <Container>
             <ContentForm>
               <Form
@@ -70,7 +70,8 @@ class Signin extends React.Component {
                 method="POST"
                 success={this.state.completed}
                 error={this.state.error}
-                onSubmit={async e => this.handleSubmit(e, signin)}
+                loading={loading}
+                onSubmit={e => this.handleSubmit(e, signin)}
               >
                 <Form.Group>
                   <Form.Input
@@ -102,9 +103,7 @@ class Signin extends React.Component {
                   header="Forbidden Server"
                   content={this.state.message}
                 />
-                <Button type="submit" loading={this.state.loading}>
-                  Submit
-                </Button>
+                <Button type="submit">Submit</Button>
               </Form>
             </ContentForm>
           </Container>

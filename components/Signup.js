@@ -1,10 +1,10 @@
 import React from 'react'
-import Router from 'next/router'
 import {Button, Container, Form, Message} from 'semantic-ui-react'
 import {Mutation} from 'react-apollo'
 import gql from 'graphql-tag'
 
 import ContentForm from './styles/ContentForm'
+import {CURRENT_USER_QUERY} from './User'
 
 const SIGNUP_MUTATION = gql`
   mutation SIGNUP_MUTATION(
@@ -34,7 +34,6 @@ class Signup extends React.Component {
     email: '',
     password: '',
     message: '',
-    loading: false,
     completed: false,
     error: false
   }
@@ -44,15 +43,14 @@ class Signup extends React.Component {
   handleSubmit = async (e, signup) => {
     try {
       e.preventDefault()
-      this.setState({loading: true})
       await signup(this.state)
-      this.setState({loading: false, completed: true})
+      this.setState({completed: true})
       setTimeout(() => {
         this.setState({completed: false})
-        Router.push('/login')
+        window.location.href = '/'
       }, 3000)
     } catch (err) {
-      this.setState({message: err.message, error: true, loading: false})
+      this.setState({message: err.message, error: true})
       setTimeout(() => {
         this.setState({error: false})
       }, 3000)
@@ -61,8 +59,12 @@ class Signup extends React.Component {
 
   render() {
     return (
-      <Mutation mutation={SIGNUP_MUTATION} variables={this.state}>
-        {(signup, {error, loading}) => (
+      <Mutation
+        mutation={SIGNUP_MUTATION}
+        variables={this.state}
+        refetchQueries={[{query: CURRENT_USER_QUERY}]}
+      >
+        {(signup, {loading}) => (
           <Container>
             <ContentForm>
               <Form
@@ -70,7 +72,8 @@ class Signup extends React.Component {
                 method="POST"
                 success={this.state.completed}
                 error={this.state.error}
-                onSubmit={async e => this.handleSubmit(e, signup)}
+                loading={loading}
+                onSubmit={e => this.handleSubmit(e, signup)}
               >
                 <Form.Group>
                   <Form.Input
@@ -120,9 +123,7 @@ class Signup extends React.Component {
                   header="Forbidden Server"
                   content={this.state.message}
                 />
-                <Button type="submit" loading={this.state.loading}>
-                  Submit
-                </Button>
+                <Button type="submit">Submit</Button>
               </Form>
             </ContentForm>
           </Container>
