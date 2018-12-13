@@ -8,5 +8,4 @@ const ContentForm = styled.div`
   padding: 30px;
   margin: 40px auto;
 `
-
 export default ContentForm
