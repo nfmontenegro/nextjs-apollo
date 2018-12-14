@@ -19,10 +19,10 @@ const SIGNUP_MUTATION = gql`
       lastname: $lastname
       name: $name
     ) {
-      token
-      user {
-        id
-      }
+      id
+      email
+      name
+      lastname
     }
   }
 `
@@ -45,15 +45,8 @@ class Signup extends React.Component {
       e.preventDefault()
       await signup(this.state)
       this.setState({completed: true})
-      setTimeout(() => {
-        this.setState({completed: false})
-        window.location.href = '/'
-      }, 3000)
     } catch (err) {
       this.setState({message: err.message, error: true})
-      setTimeout(() => {
-        this.setState({error: false})
-      }, 3000)
     }
   }
 
@@ -73,7 +66,11 @@ class Signup extends React.Component {
                 success={this.state.completed}
                 error={this.state.error}
                 loading={loading}
-                onSubmit={e => this.handleSubmit(e, signup)}
+                onSubmit={async e => {
+                  e.preventDefault()
+                  await signup()
+                  this.setState({completed: true})
+                }}
               >
                 <Form.Group>
                   <Form.Input

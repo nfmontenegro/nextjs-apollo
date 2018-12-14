@@ -10,30 +10,11 @@ import ContentLoader from './styles/ContentLoader'
 class Page extends Component {
   render() {
     return (
-      <User>
-        {({loading}) => {
-          if (loading)
-            return (
-              <ContentLoader>
-                <Loader
-                  active
-                  inline="centered"
-                  size="large"
-                  style={{marginTop: '20%'}}
-                >
-                  Loading...
-                </Loader>
-              </ContentLoader>
-            )
-          return (
-            <>
-              <Meta />
-              <Header />
-              {this.props.children}
-            </>
-          )
-        }}
-      </User>
+      <>
+        <Meta />
+        <Header />
+        {this.props.children}
+      </>
     )
   }
 }
