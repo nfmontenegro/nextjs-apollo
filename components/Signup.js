@@ -35,7 +35,7 @@ class Signup extends React.Component {
     email: '',
     password: '',
     message: '',
-    completed: false,
+    success: false,
     error: false
   }
 
@@ -45,7 +45,7 @@ class Signup extends React.Component {
     try {
       e.preventDefault()
       await signup(this.state)
-      this.setState({completed: true})
+      this.setState({success: true})
       setTimeout(() => {
         Router.push('/login')
       }, 2000)
@@ -67,7 +67,7 @@ class Signup extends React.Component {
               <Form
                 id="form"
                 method="POST"
-                success={this.state.completed}
+                success={this.state.success}
                 error={this.state.error}
                 loading={loading}
                 onSubmit={e => this.handleSubmit(e, signup)}
@@ -112,7 +112,7 @@ class Signup extends React.Component {
                 </Form.Group>
                 <Message
                   success
-                  header="Form Completed"
+                  header="Form completed"
                   content="You're all signed up for the App"
                 />
                 <Message
