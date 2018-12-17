@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Container, Form, Message} from 'semantic-ui-react'
+import {Button, Container, Form, Icon, Message} from 'semantic-ui-react'
 import {Mutation, withApollo} from 'react-apollo'
 import AsyncStorage from '@callstack/async-storage'
 import gql from 'graphql-tag'
@@ -10,10 +10,7 @@ import ContentForm from './styles/ContentForm'
 const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($email: String!, $password: String!) {
     signin(email: $email, password: $password) {
-      token
-      user {
-        id
-      }
+      id
     }
   }
 `
@@ -23,7 +20,8 @@ class Signin extends React.Component {
     email: '',
     password: '',
     message: '',
-    error: false
+    error: false,
+    success: false
   }
 
   handleChange = (e, {name, value}) => this.setState({[name]: value})
@@ -36,6 +34,7 @@ class Signin extends React.Component {
       // Store the token in localstorage
       AsyncStorage.setItem('token', response.data.signin.token)
         .then(() => {
+          this.setState({success: true})
           // Force a reload of all the current queries now that the user is
           // logged in
           this.props.client.cache.reset().then(() => {
@@ -45,9 +44,6 @@ class Signin extends React.Component {
         .catch(err => console.log(err))
     } catch (err) {
       this.setState({message: err.message, error: true, loading: false})
-      setTimeout(() => {
-        this.setState({error: false})
-      }, 3000)
     }
   }
 
@@ -65,6 +61,7 @@ class Signin extends React.Component {
                 id="form"
                 method="POST"
                 error={this.state.error}
+                success={this.state.success}
                 loading={loading}
                 onSubmit={e => this.handleSubmit(e, signin)}
               >
@@ -88,11 +85,21 @@ class Signin extends React.Component {
                     value={this.state.password}
                   />
                 </Form.Group>
+                <Message icon success floating attached>
+                  <Icon name="circle notched" loading={loading} />
+                  <Message.Content>
+                    <Message.Header>Just one second</Message.Header>
+                    We are fetching that content for you.
+                  </Message.Content>
+                </Message>
                 <Message
                   error
+                  attached
+                  floating
                   header="Forbidden Server"
                   content={this.state.message}
                 />
+                <br />
                 <Button type="submit">Submit</Button>
               </Form>
             </ContentForm>

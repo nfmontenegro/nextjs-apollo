@@ -1,7 +1,8 @@
 import React from 'react'
+import gql from 'graphql-tag'
+import Router from 'next/router'
 import {Button, Container, Form, Message} from 'semantic-ui-react'
 import {Mutation} from 'react-apollo'
-import gql from 'graphql-tag'
 
 import ContentForm from './styles/ContentForm'
 import {CURRENT_USER_QUERY} from './User'
@@ -45,6 +46,9 @@ class Signup extends React.Component {
       e.preventDefault()
       await signup(this.state)
       this.setState({completed: true})
+      setTimeout(() => {
+        Router.push('/login')
+      }, 2000)
     } catch (err) {
       this.setState({message: err.message, error: true})
     }
@@ -66,11 +70,7 @@ class Signup extends React.Component {
                 success={this.state.completed}
                 error={this.state.error}
                 loading={loading}
-                onSubmit={async e => {
-                  e.preventDefault()
-                  await signup()
-                  this.setState({completed: true})
-                }}
+                onSubmit={e => this.handleSubmit(e, signup)}
               >
                 <Form.Group>
                   <Form.Input
@@ -113,7 +113,7 @@ class Signup extends React.Component {
                 <Message
                   success
                   header="Form Completed"
-                  content="You're all signed up for the newsletter"
+                  content="You're all signed up for the App"
                 />
                 <Message
                   error
