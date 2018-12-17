@@ -1,6 +1,5 @@
 import Link from 'next/link'
-import AsyncStorage from '@callstack/async-storage'
-import {Image, Menu} from 'semantic-ui-react'
+import {Dropdown, Image, Menu} from 'semantic-ui-react'
 
 import User from './User'
 import Signout from './Signout'
@@ -9,7 +8,7 @@ const Nav = () => (
   <User>
     {({data: {me}}) => {
       return (
-        <Menu fixed="top">
+        <Menu fixed="top" className="shadow-depth-1">
           <Menu.Item>
             <Image size="mini" src="https://react.semantic-ui.com/logo.png" />
           </Menu.Item>
@@ -33,11 +32,25 @@ const Nav = () => (
                     <a>About</a>
                   </Link>
                 </div>
-                <div className="item">
-                  <Link href="/home">
-                    <Signout />
-                  </Link>
-                </div>
+                <Dropdown
+                  item
+                  text={`${me.name} ${me.lastname}`}
+                  pointing
+                  className="item"
+                >
+                  <Dropdown.Menu>
+                    <Dropdown.Item>
+                      <Link href={{pathname: '/profile', query: {id: me.id}}}>
+                        <a>Profile</a>
+                      </Link>
+                    </Dropdown.Item>
+                    <Dropdown.Item>
+                      <Link href="/home">
+                        <Signout />
+                      </Link>
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
               </>
             )}
 

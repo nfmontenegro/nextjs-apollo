@@ -63,7 +63,7 @@ class Signup extends React.Component {
       >
         {(signup, {loading}) => (
           <Container>
-            <ContentForm>
+            <ContentForm className="shadow-depth-1">
               <Form
                 id="form"
                 method="POST"
@@ -120,7 +120,7 @@ class Signup extends React.Component {
                   header="Forbidden Server"
                   content={this.state.message}
                 />
-                <Button type="submit">Submit</Button>
+                <Button type="submit">REGISTER</Button>
               </Form>
             </ContentForm>
           </Container>

@@ -18,6 +18,7 @@ const CURRENT_USER_QUERY = gql`
 const User = props => (
   <Query {...props} query={CURRENT_USER_QUERY}>
     {payload => {
+      if (payload.loading) return null
       return props.children(payload)
     }}
   </Query>
