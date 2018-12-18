@@ -3,6 +3,7 @@ import Router from 'next/router'
 import {Card, Container, Grid, Image} from 'semantic-ui-react'
 
 import User from './User'
+
 import ProfileName from './styles/ProfileName'
 import ButtonEditProfile from './styles/ButtonEditProfile'
 

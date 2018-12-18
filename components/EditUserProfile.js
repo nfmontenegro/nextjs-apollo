@@ -57,69 +57,73 @@ class EditUserProfile extends React.Component {
   render() {
     return (
       <User>
-        {({data: {me}}) => (
-          <Mutation
-            mutation={UPDATE_USER}
-            variables={this.state}
-            refetchQueries={[{query: CURRENT_USER_QUERY}]}
-          >
-            {(updateUser, {loading}) => (
-              <Container>
-                <ProfileName size="48px" align="center" marginTop="40px">
-                  Settings for{' '}
-                  <span style={{backgroundColor: '#fefa87'}}>
-                    @{me.name} {me.lastname}
-                  </span>
-                </ProfileName>
-                <ContentForm className="shadow-depth-1">
-                  <Form
-                    id="form"
-                    method="POST"
-                    error={this.state.error}
-                    success={this.state.success}
-                    loading={loading}
-                    onSubmit={e => this.handleSubmit(e, updateUser)}
-                  >
-                    <Form.Group>
-                      <Form.Input
-                        label="Name"
-                        width={12}
-                        value={this.state.name || ''}
-                        name="name"
-                        onChange={this.handleChange}
+        {({data: {me}}) => {
+          console.log('Me:', me)
+          return (
+            <Mutation
+              mutation={UPDATE_USER}
+              variables={this.state}
+              refetchQueries={[{query: CURRENT_USER_QUERY}]}
+            >
+              {(updateUser, {loading}) => (
+                <Container>
+                  <ProfileName size="48px" align="center" marginTop="40px">
+                    Settings for{' '}
+                    <span style={{backgroundColor: '#fefa87'}}>
+                      @{me.name} {me.lastname}
+                    </span>
+                  </ProfileName>
+                  <ContentForm className="shadow-depth-1">
+                    <Form
+                      id="form"
+                      method="POST"
+                      error={this.state.error}
+                      success={this.state.success}
+                      loading={loading}
+                      onSubmit={e => this.handleSubmit(e, updateUser)}
+                    >
+                      <Form.Group>
+                        <Form.Input
+                          label="Name"
+                          width={12}
+                          value={this.state.name || ''}
+                          name="name"
+                          onChange={this.handleChange}
+                        />
+                        <Form.Input
+                          label="Last Name"
+                          width={8}
+                          name="lastname"
+                          value={this.state.lastname || ''}
+                          onChange={this.handleChange}
+                        />
+                      </Form.Group>
+                      <Message icon success floating attached>
+                        <Icon name="circle notched" loading={loading} />
+                        <Message.Content>
+                          <Message.Header>
+                            Just one second, We are fetching that content for
+                            you.
+                          </Message.Header>
+                          {this.state.message}
+                        </Message.Content>
+                      </Message>
+                      <Message
+                        error
+                        attached
+                        floating
+                        header="Forbidden Server"
+                        content={this.state.message}
                       />
-                      <Form.Input
-                        label="Last Name"
-                        width={8}
-                        name="lastname"
-                        value={this.state.lastname || ''}
-                        onChange={this.handleChange}
-                      />
-                    </Form.Group>
-                    <Message icon success floating attached>
-                      <Icon name="circle notched" loading={loading} />
-                      <Message.Content>
-                        <Message.Header>
-                          Just one second, We are fetching that content for you.
-                        </Message.Header>
-                        {this.state.message}
-                      </Message.Content>
-                    </Message>
-                    <Message
-                      error
-                      attached
-                      floating
-                      header="Forbidden Server"
-                      content={this.state.message}
-                    />
-                    <br />
-                    <Button type="submit">EDIT PROFILE</Button>
-                  </Form>
-                </ContentForm>
-              </Container>
-            )}
-          </Mutation>
-        )}
+                      <br />
+                      <Button type="submit">EDIT PROFILE</Button>
+                    </Form>
+                  </ContentForm>
+                </Container>
+              )}
+            </Mutation>
+          )
+        }}
       </User>
     )
   }

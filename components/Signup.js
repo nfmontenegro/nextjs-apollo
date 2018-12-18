@@ -46,6 +46,7 @@ class Signup extends React.Component {
       e.preventDefault()
       await signup(this.state)
       this.setState({success: true})
+      document.getElementById('form').reset()
       setTimeout(() => {
         Router.push('/login')
       }, 2000)
@@ -110,11 +111,13 @@ class Signup extends React.Component {
                     value={this.state.password}
                   />
                 </Form.Group>
-                <Message
-                  success
-                  header="Form completed"
-                  content="You're all signed up for the App"
-                />
+                <Message icon success floating attached>
+                  <Icon name="circle notched" loading={loading} />
+                  <Message.Content>
+                    <Message.Header>Just one second</Message.Header>
+                    We are fetching that content for you.
+                  </Message.Content>
+                </Message>
                 <Message
                   error
                   header="Forbidden Server"

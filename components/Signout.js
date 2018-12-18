@@ -2,6 +2,9 @@ import React from 'react'
 import gql from 'graphql-tag'
 import Router from 'next/router'
 import {Mutation} from 'react-apollo'
+import {toast} from 'react-toastify'
+
+import 'react-toastify/dist/ReactToastify.css'
 
 import {CURRENT_USER_QUERY} from './User'
 
@@ -13,10 +16,12 @@ const SIGN_OUT_MUTATION = gql`
   }
 `
 
-async function handleSignout(signout) {
-  const test = await signout()
-  console.log('Test:', test)
-  Router.push('/')
+async function handleSignout(e, signout) {
+  e.preventDefault()
+  toast.info('Bye ✋🏻', {
+    onOpen: () => Router.push('/'),
+    onClose: async () => await signout()
+  })
 }
 
 const Signout = () => (
@@ -25,9 +30,11 @@ const Signout = () => (
     refetchQueries={[{query: CURRENT_USER_QUERY}]}
   >
     {signout => (
-      <a style={{cursor: 'pointer'}} onClick={() => handleSignout(signout)}>
-        Sign Out
-      </a>
+      <>
+        <a style={{cursor: 'pointer'}} onClick={e => handleSignout(e, signout)}>
+          Sign Out
+        </a>
+      </>
     )}
   </Mutation>
 )

@@ -29,9 +29,8 @@ class Signin extends React.Component {
   handleSubmit = async (e, signin) => {
     try {
       e.preventDefault()
-      document.getElementById('form').reset()
       await signin(this.state)
-
+      this.setState({success: true})
       // Force a reload of all the current queries now that the user is
       // logged in
       this.props.client.cache.reset().then(() => {
@@ -95,7 +94,9 @@ class Signin extends React.Component {
                   content={this.state.message}
                 />
                 <br />
-                <Button type="submit">LOGIN</Button>
+                <Button type="submit" disabled={this.state.success}>
+                  LOGIN
+                </Button>
               </Form>
             </ContentForm>
           </Container>
