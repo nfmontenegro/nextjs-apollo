@@ -20,7 +20,7 @@ class UserProfile extends React.Component {
             <Card className="profile-card shadow-depth-1">
               <Grid>
                 <Grid.Column width={4}>
-                  <Image src="https://react.semantic-ui.com/images/wireframe/image.png" />
+                  <Image src={me.urlProfilePicture} />
                 </Grid.Column>
                 <Grid.Column width={7}>
                   <>

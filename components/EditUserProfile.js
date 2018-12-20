@@ -1,18 +1,40 @@
 import React from 'react'
 import gql from 'graphql-tag'
 import Router from 'next/router'
+import getConfig from 'next/config'
 import {graphql, Mutation} from 'react-apollo'
 import {Button, Container, Form, Icon, Message} from 'semantic-ui-react'
 
 import User from './User'
 import {CURRENT_USER_QUERY} from './User'
+
+import {uploadImage} from 'Services/aws'
+
 import ContentForm from './styles/ContentForm'
 import ProfileName from './styles/ProfileName'
 
+const {publicRuntimeConfig} = getConfig()
+
 const UPDATE_USER = gql`
-  mutation updateUser($id: ID!, $name: String, $lastname: String) {
-    updateUser(id: $id, name: $name, lastname: $lastname) {
-      message
+  mutation updateUser(
+    $id: ID!
+    $name: String
+    $lastname: String
+    $idUrlProfilePicture: String
+    $urlProfilePicture: String
+  ) {
+    updateUser(
+      id: $id
+      name: $name
+      lastname: $lastname
+      idUrlProfilePicture: $idUrlProfilePicture
+      urlProfilePicture: $urlProfilePicture
+    ) {
+      id
+      name
+      lastname
+      urlProfilePicture
+      idUrlProfilePicture
     }
   }
 `
@@ -21,7 +43,8 @@ class EditUserProfile extends React.Component {
   state = {
     message: '',
     error: false,
-    success: false
+    success: false,
+    loading: false
   }
 
   componentDidMount() {
@@ -30,7 +53,9 @@ class EditUserProfile extends React.Component {
       id: this.props.data.me.id,
       name: this.props.data.me.name,
       lastname: this.props.data.me.lastname,
-      email: this.props.data.me.email
+      email: this.props.data.me.email,
+      urlProfilePicture: this.props.data.me.urlProfilePicture,
+      idUrlProfilePicture: this.props.data.me.idUrlProfilePicture
     })
   }
 
@@ -41,11 +66,46 @@ class EditUserProfile extends React.Component {
     })
   }
 
+  handleUploadFile = event =>
+    this.setState({
+      urlProfilePicture: event.target.files[0]
+    })
+
   handleSubmit = async (e, updateUser) => {
     e.preventDefault()
     try {
-      const response = await updateUser()
-      this.setState({message: response.data.updateUser.message, success: true})
+      this.setState({loading: true})
+      let paramsUploadImage
+      let imageUrl
+      if (this.state.urlProfilePicture) {
+        paramsUploadImage = {
+          Body: this.state.urlProfilePicture,
+          Bucket: publicRuntimeConfig.AWS_BUCKET,
+          Key: `${new Date().getTime()}_${this.state.id}`,
+          ContentType: this.state.urlProfilePicture.type
+        }
+
+        imageUrl = `https://${
+          publicRuntimeConfig.AWS_BUCKET
+        }.s3.amazonaws.com/${paramsUploadImage.Key} `
+
+        await uploadImage(paramsUploadImage)
+      }
+
+      const response = await updateUser({
+        variables: {
+          ...this.state,
+          urlProfilePicture: imageUrl ? imageUrl : '',
+          idUrlProfilePicture: paramsUploadImage ? paramsUploadImage.Key : ''
+        }
+      })
+
+      this.setState({
+        message: 'Success updated!',
+        success: true,
+        loading: false
+      })
+
       setTimeout(() => {
         Router.push(`/profile?id=${this.state.id}`)
       }, 2000)
@@ -58,7 +118,6 @@ class EditUserProfile extends React.Component {
     return (
       <User>
         {({data: {me}}) => {
-          console.log('Me:', me)
           return (
             <Mutation
               mutation={UPDATE_USER}
@@ -79,13 +138,13 @@ class EditUserProfile extends React.Component {
                       method="POST"
                       error={this.state.error}
                       success={this.state.success}
-                      loading={loading}
+                      loading={this.state.loading}
                       onSubmit={e => this.handleSubmit(e, updateUser)}
                     >
                       <Form.Group>
                         <Form.Input
                           label="Name"
-                          width={12}
+                          width={8}
                           value={this.state.name || ''}
                           name="name"
                           onChange={this.handleChange}
@@ -96,6 +155,15 @@ class EditUserProfile extends React.Component {
                           name="lastname"
                           value={this.state.lastname || ''}
                           onChange={this.handleChange}
+                        />
+                      </Form.Group>
+                      <Form.Group>
+                        <Form.Input
+                          type="file"
+                          label="Avatar"
+                          width={8}
+                          name="urlProfilePicture"
+                          onChange={this.handleUploadFile}
                         />
                       </Form.Group>
                       <Message icon success floating attached>
