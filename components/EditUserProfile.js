@@ -8,7 +8,7 @@ import {Button, Container, Form, Icon, Message} from 'semantic-ui-react'
 import User from './User'
 import {CURRENT_USER_QUERY} from './User'
 
-import {uploadImage} from 'Services/aws'
+import {uploadImage, deleteImage} from 'Services/aws'
 
 import ContentForm from './styles/ContentForm'
 import ProfileName from './styles/ProfileName'
@@ -77,6 +77,22 @@ class EditUserProfile extends React.Component {
       this.setState({loading: true})
       let paramsUploadImage
       let imageUrl
+
+      if (this.state.idUrlProfilePicture) {
+        const paramsDeleteImage = {
+          Bucket: publicRuntimeConfig.AWS_BUCKET,
+          Delete: {
+            Objects: [
+              {
+                Key: this.state.idUrlProfilePicture
+              }
+            ]
+          }
+        }
+
+        await deleteImage(paramsDeleteImage)
+      }
+
       if (this.state.urlProfilePicture) {
         paramsUploadImage = {
           Body: this.state.urlProfilePicture,
@@ -100,6 +116,7 @@ class EditUserProfile extends React.Component {
         }
       })
 
+      document.getElementById('form').reset()
       this.setState({
         message: 'Success updated!',
         success: true,

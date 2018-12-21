@@ -33,25 +33,33 @@ const Nav = () => (
                       <a>About</a>
                     </Link>
                   </div>
-                  <Dropdown
-                    item
-                    text={`${me.name} ${me.lastname}`}
-                    pointing
-                    className="item"
-                  >
-                    <Dropdown.Menu>
-                      <Dropdown.Item>
-                        <Link href={{pathname: '/profile', query: {id: me.id}}}>
-                          <a>Profile</a>
-                        </Link>
-                      </Dropdown.Item>
-                      <Dropdown.Item>
-                        <Link href="/home">
-                          <Signout />
-                        </Link>
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
+
+                  <div className="item">
+                    <Image
+                      src={
+                        me.urlProfilePicture
+                          ? me.urlProfilePicture
+                          : 'https://react.semantic-ui.com/images/wireframe/image.png'
+                      }
+                      avatar
+                    />
+                    <Dropdown text={`${me.name} ${me.lastname}`} pointing>
+                      <Dropdown.Menu>
+                        <Dropdown.Item>
+                          <Link
+                            href={{pathname: '/profile', query: {id: me.id}}}
+                          >
+                            <a>Profile</a>
+                          </Link>
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                          <Link href="/home">
+                            <Signout />
+                          </Link>
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </div>
                 </>
               )}
 
