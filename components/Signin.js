@@ -61,6 +61,7 @@ class Signin extends React.Component {
               >
                 <Form.Group>
                   <Form.Input
+                    type="email"
                     label="Email"
                     placeholder="Email"
                     width={12}
@@ -70,6 +71,7 @@ class Signin extends React.Component {
                     value={this.state.email}
                   />
                   <Form.Input
+                    type="password"
                     label="Password"
                     placeholder="Password"
                     width={12}

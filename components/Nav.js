@@ -37,13 +37,13 @@ const Nav = () => (
                   <div className="item">
                     <Image
                       src={
-                        me.urlProfilePicture
+                        me
                           ? me.urlProfilePicture
                           : 'https://react.semantic-ui.com/images/wireframe/image.png'
                       }
                       avatar
                     />
-                    <Dropdown text={`${me.name} ${me.lastname}`} pointing>
+                    <Dropdown text={me.username} pointing>
                       <Dropdown.Menu>
                         <Dropdown.Item>
                           <Link

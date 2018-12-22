@@ -1,7 +1,7 @@
 import React from 'react'
 import gql from 'graphql-tag'
 import Router from 'next/router'
-import {Button, Container, Form, Message} from 'semantic-ui-react'
+import {Button, Container, Form, Icon, Message} from 'semantic-ui-react'
 import {Mutation} from 'react-apollo'
 
 import ContentForm from './styles/ContentForm'
@@ -13,17 +13,23 @@ const SIGNUP_MUTATION = gql`
     $password: String!
     $name: String!
     $lastname: String!
+    $username: String!
+    $websiteurl: String
   ) {
     signup(
       email: $email
       password: $password
       lastname: $lastname
       name: $name
+      username: $username
+      websiteurl: $websiteurl
     ) {
       id
       email
       name
       lastname
+      username
+      websiteurl
     }
   }
 `
@@ -34,6 +40,8 @@ class Signup extends React.Component {
     lastname: '',
     email: '',
     password: '',
+    username: '',
+    websiteurl: '',
     message: '',
     success: false,
     error: false
@@ -89,6 +97,24 @@ class Signup extends React.Component {
                     name="lastname"
                     onChange={this.handleChange}
                     value={this.state.lastname}
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Input
+                    label="Username"
+                    placeholder="Username"
+                    width={12}
+                    name="username"
+                    onChange={this.handleChange}
+                    value={this.state.username}
+                  />
+                  <Form.Input
+                    label="Website Url"
+                    placeholder="Website Url"
+                    width={12}
+                    name="websiteurl"
+                    onChange={this.handleChange}
+                    value={this.state.websiteurl}
                   />
                 </Form.Group>
                 <Form.Group>

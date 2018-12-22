@@ -11,6 +11,8 @@ const CURRENT_USER_QUERY = gql`
       email
       name
       lastname
+      username
+      websiteurl
       urlProfilePicture
       idUrlProfilePicture
     }

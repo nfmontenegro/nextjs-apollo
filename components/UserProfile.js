@@ -5,6 +5,7 @@ import {Card, Container, Grid, Image} from 'semantic-ui-react'
 import User from './User'
 
 import ProfileName from './styles/ProfileName'
+import ProfileDescription from './styles/ProfileDescription'
 import ButtonEditProfile from './styles/ButtonEditProfile'
 
 class UserProfile extends React.Component {
@@ -36,6 +37,11 @@ class UserProfile extends React.Component {
                     <ButtonEditProfile onClick={() => this.editProfile(me.id)}>
                       EDIT PROFILE
                     </ButtonEditProfile>
+                    {me.websiteurl && (
+                      <ProfileDescription>
+                        Website: {me.websiteurl}
+                      </ProfileDescription>
+                    )}
                   </>
                 </Grid.Column>
                 <Grid.Column width={5}>

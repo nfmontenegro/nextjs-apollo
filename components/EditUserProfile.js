@@ -20,6 +20,7 @@ const UPDATE_USER = gql`
     $id: ID!
     $name: String
     $lastname: String
+    $websiteurl: String
     $idUrlProfilePicture: String
     $urlProfilePicture: String
   ) {
@@ -27,12 +28,14 @@ const UPDATE_USER = gql`
       id: $id
       name: $name
       lastname: $lastname
+      websiteurl: $websiteurl
       idUrlProfilePicture: $idUrlProfilePicture
       urlProfilePicture: $urlProfilePicture
     ) {
       id
       name
       lastname
+      websiteurl
       urlProfilePicture
       idUrlProfilePicture
     }
@@ -54,8 +57,10 @@ class EditUserProfile extends React.Component {
       name: this.props.data.me.name,
       lastname: this.props.data.me.lastname,
       email: this.props.data.me.email,
+      websiteurl: this.props.data.me.websiteurl,
       urlProfilePicture: this.props.data.me.urlProfilePicture,
-      idUrlProfilePicture: this.props.data.me.idUrlProfilePicture
+      idUrlProfilePicture: this.props.data.me.idUrlProfilePicture,
+      image: ''
     })
   }
 
@@ -68,7 +73,7 @@ class EditUserProfile extends React.Component {
 
   handleUploadFile = event =>
     this.setState({
-      urlProfilePicture: event.target.files[0]
+      image: event.target.files[0]
     })
 
   handleSubmit = async (e, updateUser) => {
@@ -78,7 +83,7 @@ class EditUserProfile extends React.Component {
       let paramsUploadImage
       let imageUrl
 
-      if (this.state.idUrlProfilePicture) {
+      if (this.state.image && this.state.idUrlProfilePicture) {
         const paramsDeleteImage = {
           Bucket: publicRuntimeConfig.AWS_BUCKET,
           Delete: {
@@ -93,12 +98,12 @@ class EditUserProfile extends React.Component {
         await deleteImage(paramsDeleteImage)
       }
 
-      if (this.state.urlProfilePicture) {
+      if (this.state.image) {
         paramsUploadImage = {
-          Body: this.state.urlProfilePicture,
+          Body: this.state.image,
           Bucket: publicRuntimeConfig.AWS_BUCKET,
           Key: `${new Date().getTime()}_${this.state.id}`,
-          ContentType: this.state.urlProfilePicture.type
+          ContentType: this.state.image.type
         }
 
         imageUrl = `https://${
@@ -108,11 +113,13 @@ class EditUserProfile extends React.Component {
         await uploadImage(paramsUploadImage)
       }
 
-      const response = await updateUser({
+      await updateUser({
         variables: {
           ...this.state,
-          urlProfilePicture: imageUrl ? imageUrl : '',
-          idUrlProfilePicture: paramsUploadImage ? paramsUploadImage.Key : ''
+          urlProfilePicture: imageUrl ? imageUrl : this.state.urlProfilePicture,
+          idUrlProfilePicture: paramsUploadImage
+            ? paramsUploadImage.Key
+            : this.state.idUrlProfilePicture
         }
       })
 
@@ -146,7 +153,7 @@ class EditUserProfile extends React.Component {
                   <ProfileName size="48px" align="center" marginTop="40px">
                     Settings for{' '}
                     <span style={{backgroundColor: '#fefa87'}}>
-                      @{me.name} {me.lastname}
+                      @{me.username}
                     </span>
                   </ProfileName>
                   <ContentForm className="shadow-depth-1">
@@ -175,6 +182,13 @@ class EditUserProfile extends React.Component {
                         />
                       </Form.Group>
                       <Form.Group>
+                        <Form.Input
+                          label="Web Site Url"
+                          width={8}
+                          name="websiteurl"
+                          value={this.state.websiteurl || ''}
+                          onChange={this.handleChange}
+                        />
                         <Form.Input
                           type="file"
                           label="Avatar"
