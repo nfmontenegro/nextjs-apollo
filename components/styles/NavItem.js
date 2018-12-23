@@ -11,6 +11,7 @@ const NavItem = styled.div`
   border: 2px solid #0a0a0a;
   cursor: pointer;
   margin: 15px 15px 0 0;
+  background-color: #fdf9f3;
 `
 
 export default NavItem

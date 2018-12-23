@@ -37,7 +37,7 @@ const Nav = () => (
                       }
                       avatar
                     />
-                    <Dropdown text={me.username} pointing>
+                    <Dropdown pointing>
                       <Dropdown.Menu>
                         <Dropdown.Item>
                           <Link

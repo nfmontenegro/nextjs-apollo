@@ -11,15 +11,15 @@ const CREATEITEM_MUTATION = gql`
   mutation CREATEITEM_MUTATION(
     $title: String!
     $description: String!
-    $urlItemImage: String!
-    $idUrlItemImage: String!
+    $urlImage: String!
+    $idUrlImage: String!
     $price: String!
   ) {
     createItem(
       title: $title
       description: $description
-      urlItemImage: $urlItemImage
-      idUrlItemImage: $idUrlItemImage
+      urlImage: $urlImage
+      idUrlImage: $idUrlImage
       price: $price
     ) {
       id
@@ -42,7 +42,7 @@ function CreateItem({form, stateForm, data}) {
               method="POST"
               error={stateForm.error}
               success={stateForm.success}
-              loading={loading}
+              loading={stateForm.loading}
               onSubmit={e => form.handleSubmit(e, createItem)}
             >
               <Form.Group>
@@ -85,6 +85,20 @@ function CreateItem({form, stateForm, data}) {
                 />
                 <Form.Input type="hidden" required value={data.me.username} />
               </Form.Group>
+              <Message icon success floating attached>
+                <Icon name="circle notched" loading={loading} />
+                <Message.Content>
+                  <Message.Header>Just one second</Message.Header>
+                  We are fetching that content for you.
+                </Message.Content>
+              </Message>
+              <Message
+                error
+                attached
+                floating
+                header="Forbidden Server"
+                content={stateForm.message}
+              />
               <br />
               <Button type="submit" disabled={stateForm.success}>
                 Create Item

@@ -1,13 +1,17 @@
 import Router from 'next/router'
+import getConfig from 'next/config'
 
 import {uploadImage} from 'Services/aws'
+
+const {publicRuntimeConfig} = getConfig()
 
 function withForm(WrappedComponent, type) {
   return class extends React.Component {
     state = {
       message: '',
       error: false,
-      success: false
+      success: false,
+      loading: false
     }
 
     handleChange = (e, {name, value}) => this.setState({[name]: value})
@@ -21,11 +25,15 @@ function withForm(WrappedComponent, type) {
       try {
         e.preventDefault()
         if (type === 'createItem') {
+          this.setState({loading: true})
+          let paramsUploadImage
+          let imageUrl
+
           if (this.state.image) {
             paramsUploadImage = {
               Body: this.state.image,
               Bucket: publicRuntimeConfig.AWS_BUCKET,
-              Key: `${new Date().getTime()}_${this.state.id}`,
+              Key: `${new Date().getTime()}_${this.state.title}`,
               ContentType: this.state.image.type
             }
 
@@ -39,16 +47,25 @@ function withForm(WrappedComponent, type) {
           await mutation({
             variables: {
               ...this.state,
-              urlProfilePicture: imageUrl
-                ? imageUrl
-                : this.state.urlProfilePicture,
-              idUrlProfilePicture: paramsUploadImage
+              urlImage: imageUrl ? imageUrl : this.state.urlImage,
+              idUrlImage: paramsUploadImage
                 ? paramsUploadImage.Key
-                : this.state.idUrlProfilePicture
+                : this.state.idUrlImage
             }
           })
+
+          this.setState({
+            message: 'Success created!',
+            success: true,
+            loading: false
+          })
+
+          return setTimeout(() => {
+            Router.push('/home')
+          }, 2000)
         }
 
+        //main
         await mutation(this.state)
         this.setState({success: true})
         document.getElementById('form').reset()
@@ -56,13 +73,13 @@ function withForm(WrappedComponent, type) {
         if (type === 'signin') {
           // Force a reload of all the current queries now that the user is
           // logged in
-          this.props.client.cache.reset().then(() => {
+          return this.props.client.cache.reset().then(() => {
             Router.push('/')
           })
         }
 
         if (type === 'signup') {
-          setTimeout(() => {
+          return setTimeout(() => {
             Router.push('/login')
           }, 2000)
         }
@@ -72,7 +89,6 @@ function withForm(WrappedComponent, type) {
     }
 
     render() {
-      console.log('State:', this.state)
       const formProps = {
         handleChange: this.handleChange,
         handleSubmit: this.handleSubmit,
