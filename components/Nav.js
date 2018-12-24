@@ -13,11 +13,13 @@ const Nav = () => (
         <>
           <Menu fixed="top" className="shadow-depth-1">
             <Menu.Item>
-              <Image
-                href="/home"
-                size="mini"
-                src="https://react.semantic-ui.com/logo.png"
-              />
+              <Link href="/">
+                <Image
+                  style={{cursor: 'pointer'}}
+                  size="mini"
+                  src="https://react.semantic-ui.com/logo.png"
+                />
+              </Link>
             </Menu.Item>
 
             <div className="right menu">
@@ -29,7 +31,9 @@ const Nav = () => (
                     </Link>
                   </div>
                   <div className="item">
+                    {me.username}
                     <Image
+                      style={{marginLeft: '10px'}}
                       src={
                         me
                           ? me.urlProfilePicture

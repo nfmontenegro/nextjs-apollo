@@ -35,7 +35,6 @@ function Signin({form, stateForm}) {
             >
               <Form.Group>
                 <Form.Input
-                  type="email"
                   label="Email"
                   placeholder="Email"
                   width={12}

@@ -34,36 +34,6 @@ const SIGNUP_MUTATION = gql`
   }
 `
 
-// class Signup extends React.Component {
-//   state = {
-//     name: '',
-//     lastname: '',
-//     email: '',
-//     password: '',
-//     username: '',
-//     websiteurl: '',
-//     message: '',
-//     success: false,
-//     error: false
-//   }
-
-// handleChange = (e, {name, value}) => this.setState({[name]: value})
-
-// handleSubmit = async (e, signup) => {
-//   try {
-//     e.preventDefault()
-//     await signup(this.state)
-//     this.setState({success: true})
-//     document.getElementById('form').reset()
-//     setTimeout(() => {
-//       Router.push('/login')
-//     }, 2000)
-//   } catch (err) {
-//     this.setState({message: err.message, error: true})
-//   }
-// }
-
-// render() {
 function Signup({form, stateForm}) {
   return (
     <Mutation
@@ -106,6 +76,7 @@ function Signup({form, stateForm}) {
                   placeholder="Username"
                   width={12}
                   name="username"
+                  required
                   onChange={form.handleChange}
                   value={stateForm.username}
                 />
@@ -152,6 +123,7 @@ function Signup({form, stateForm}) {
                 header="Forbidden Server"
                 content={stateForm.message}
               />
+              <br />
               <Button type="submit">REGISTER</Button>
             </Form>
           </ContentForm>
