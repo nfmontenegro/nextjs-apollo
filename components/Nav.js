@@ -21,6 +21,13 @@ const Nav = () => (
                 />
               </Link>
             </Menu.Item>
+            {me && (
+              <>
+                <Menu.Item>
+                  <Link href="/items">My Publications</Link>
+                </Menu.Item>
+              </>
+            )}
 
             <div className="right menu">
               {me && (

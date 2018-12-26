@@ -1,6 +1,7 @@
 import React from 'react'
-import Router from 'next/router'
 import gql from 'graphql-tag'
+import Router from 'next/router'
+import {Query} from 'react-apollo'
 import {Card, Container, Grid, Image} from 'semantic-ui-react'
 
 import User from './User'
@@ -8,9 +9,8 @@ import User from './User'
 import ProfileName from './styles/ProfileName'
 import ProfileDescription from './styles/ProfileDescription'
 import ButtonEditProfile from './styles/ButtonEditProfile'
-import {Query} from 'react-apollo'
 
-const ItemsByUser = gql`
+const ITEMS_BY_USER = gql`
   query itemsByuser($username: String!) {
     itemsByUser(username: $username) {
       id
@@ -41,9 +41,8 @@ function UserProfile() {
   return (
     <User>
       {({data: {me}}) => (
-        <Query query={ItemsByUser} variables={{username: me.username}}>
+        <Query query={ITEMS_BY_USER} variables={{username: me.username}}>
           {({data: {itemsByUser}, loading}) => {
-            console.log('Items:', itemsByUser)
             return (
               <Container style={{marginTop: '100px'}}>
                 <Card className="profile-card shadow-depth-1">
