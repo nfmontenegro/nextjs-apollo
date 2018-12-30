@@ -1,12 +1,24 @@
 import React from 'react'
 import gql from 'graphql-tag'
 import sortBy from 'lodash.sortby'
-import {Query} from 'react-apollo'
-import {Button, Table} from 'semantic-ui-react'
+import {Mutation, Query} from 'react-apollo'
+import {Button, Header, Table} from 'semantic-ui-react'
 
 import User from './User'
+import DeleteButton from './DeleteButton'
 
 import ContentTable from './styles/ContentTable'
+
+const DELETE_ITEM_BY_USER = gql`
+  mutation deleteItem($id: ID!) {
+    deleteItem(id: $id) {
+      id
+      title
+      description
+      createdAt
+    }
+  }
+`
 
 const ITEMS_BY_USER = gql`
   query itemsByuser($username: String!) {
@@ -59,7 +71,7 @@ class Items extends React.Component {
     })
   }
 
-  renderItems = items => {
+  renderItems = (items, me) => {
     return items.map(item => {
       {
         return (
@@ -71,7 +83,16 @@ class Items extends React.Component {
               <Button.Group>
                 <Button>Edit</Button>
                 <Button.Or />
-                <Button>Delete</Button>
+                <Mutation
+                  mutation={DELETE_ITEM_BY_USER}
+                  refetchQueries={[
+                    {query: ITEMS_BY_USER, variables: {username: me.username}}
+                  ]}
+                >
+                  {deleteItem => {
+                    return <DeleteButton mutation={deleteItem} item={item} />
+                  }}
+                </Mutation>
               </Button.Group>
             </Table.Cell>
           </Table.Row>
@@ -90,22 +111,30 @@ class Items extends React.Component {
             {({data: {itemsByUser}}) => {
               return (
                 <>
-                  <ContentTable>
-                    <Table color={'blue'} className="mt-30">
-                      <Table.Header
-                        sorted={column === 'name' ? direction : null}
-                        onClick={this.handleSort('name', itemsByUser)}
-                      >
-                        <Table.Row>
-                          <Table.HeaderCell>Title</Table.HeaderCell>
-                          <Table.HeaderCell>Description</Table.HeaderCell>
-                          <Table.HeaderCell>Price</Table.HeaderCell>
-                          <Table.HeaderCell>Actions</Table.HeaderCell>
-                        </Table.Row>
-                      </Table.Header>
-                      <Table.Body>{this.renderItems(itemsByUser)}</Table.Body>
-                    </Table>
-                  </ContentTable>
+                  {itemsByUser.length > 0 ? (
+                    <ContentTable>
+                      <Table color={'blue'} className="mt-30">
+                        <Table.Header
+                          sorted={column === 'name' ? direction : null}
+                          onClick={this.handleSort('name', itemsByUser)}
+                        >
+                          <Table.Row>
+                            <Table.HeaderCell>Title</Table.HeaderCell>
+                            <Table.HeaderCell>Description</Table.HeaderCell>
+                            <Table.HeaderCell>Price</Table.HeaderCell>
+                            <Table.HeaderCell>Actions</Table.HeaderCell>
+                          </Table.Row>
+                        </Table.Header>
+                        <Table.Body>
+                          {this.renderItems(itemsByUser, me)}
+                        </Table.Body>
+                      </Table>
+                    </ContentTable>
+                  ) : (
+                    <Header as="h1" textAlign="center" color="blue">
+                      No Items
+                    </Header>
+                  )}
                 </>
               )
             }}

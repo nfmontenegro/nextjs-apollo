@@ -7,8 +7,30 @@ import withForm from 'HOC/withForm'
 import ContentForm from './styles/ContentForm'
 import {CURRENT_USER_QUERY} from './User'
 
-const CREATEITEM_MUTATION = gql`
-  mutation CREATEITEM_MUTATION(
+const ITEMS_BY_USER = gql`
+  query itemsByuser($username: String!) {
+    itemsByUser(username: $username) {
+      id
+      title
+      description
+      urlImage
+      idUrlImage
+      price
+      user {
+        id
+        name
+        lastname
+        username
+        email
+        websiteurl
+        urlProfilePicture
+        idUrlProfilePicture
+      }
+    }
+  }
+`
+const CREATE_ITEM_MUTATION = gql`
+  mutation CREATE_ITEM_MUTATION(
     $title: String!
     $description: String!
     $urlImage: String!
@@ -30,9 +52,12 @@ const CREATEITEM_MUTATION = gql`
 function CreateItem({form, stateForm, data}) {
   return (
     <Mutation
-      mutation={CREATEITEM_MUTATION}
+      mutation={CREATE_ITEM_MUTATION}
       variables={stateForm}
-      refetchQueries={[{query: CURRENT_USER_QUERY}]}
+      refetchQueries={[
+        {query: CURRENT_USER_QUERY},
+        {query: ITEMS_BY_USER, variables: {username: data.me.username}}
+      ]}
     >
       {(createItem, {loading}) => (
         <Container>
