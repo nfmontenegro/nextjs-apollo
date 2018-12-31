@@ -41,7 +41,13 @@ class DeleteButton extends React.Component {
         <Header icon="trash" content="Delete" />
         <Modal.Content>{this.modalContent(this.state.loading)}</Modal.Content>
         <Modal.Actions>
-          <Button basic color="red" inverted onClick={this.handleClose}>
+          <Button
+            basic
+            color="red"
+            inverted
+            onClick={this.handleClose}
+            disabled={this.state.loading}
+          >
             <Icon name="remove" /> No
           </Button>
           <Button
@@ -49,6 +55,7 @@ class DeleteButton extends React.Component {
             inverted
             onClick={e => this.deleteItem(e)}
             loading={this.state.loading}
+            disabled={this.state.loading}
           >
             <Icon name="checkmark" /> Yes
           </Button>

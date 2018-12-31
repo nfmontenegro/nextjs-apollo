@@ -50,8 +50,6 @@ class Items extends React.Component {
     direction: null
   }
 
-  componentDidMount() {}
-
   handleSort = (clickedColumn, data) => () => {
     const {column, direction} = this.state
 

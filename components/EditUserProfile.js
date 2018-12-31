@@ -51,7 +51,7 @@ class EditUserProfile extends React.Component {
   }
 
   componentDidMount() {
-    //charge data from apollo props
+    //set data from apollo props
     this.setState({
       id: this.props.data.me.id,
       name: this.props.data.me.name,

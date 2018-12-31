@@ -4,8 +4,9 @@ import {Button, Container, Form, Icon, Message} from 'semantic-ui-react'
 import {graphql, Mutation} from 'react-apollo'
 
 import withForm from 'HOC/withForm'
-import ContentForm from './styles/ContentForm'
 import {CURRENT_USER_QUERY} from './User'
+
+import ContentForm from './styles/ContentForm'
 
 const ITEMS_BY_USER = gql`
   query itemsByuser($username: String!) {

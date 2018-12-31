@@ -9,6 +9,7 @@ class Page extends Component {
       <>
         <Meta />
         <Header />
+        {/* encapsulated within this component  _app.js*/}
         {this.props.children}
       </>
     )

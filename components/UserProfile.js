@@ -33,11 +33,11 @@ const ITEMS_BY_USER = gql`
   }
 `
 
-function UserProfile() {
-  const editProfile = userId => {
-    Router.push(`/updateProfile?id=${userId}`)
-  }
+function editProfile(userId) {
+  Router.push(`/updateProfile?id=${userId}`)
+}
 
+function UserProfile() {
   return (
     <User>
       {({data: {me}}) => (
