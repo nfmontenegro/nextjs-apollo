@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import {Dropdown, Image, Menu} from 'semantic-ui-react'
+import {Dropdown, Icon, Image, Menu} from 'semantic-ui-react'
 
 import User from './User'
 import Signout from './Signout'
@@ -24,7 +24,9 @@ const Nav = () => (
             {me && (
               <>
                 <Menu.Item>
-                  <Link href="/items">My Publications</Link>
+                  <Link href="/items">
+                    <Icon name="clipboard outline" />
+                  </Link>
                 </Menu.Item>
               </>
             )}

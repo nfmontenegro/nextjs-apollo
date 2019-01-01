@@ -78,6 +78,9 @@ function UserProfile() {
                           Website: {me.websiteurl}
                         </ProfileDescription>
                       )}
+                      <ProfileDescription size="18px">
+                        Joined: {me.parseDate}
+                      </ProfileDescription>
                     </Grid.Column>
                   </Grid>
                 </Card>

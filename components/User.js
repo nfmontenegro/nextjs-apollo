@@ -15,6 +15,7 @@ const CURRENT_USER_QUERY = gql`
       websiteurl
       urlProfilePicture
       idUrlProfilePicture
+      parseDate
     }
   }
 `

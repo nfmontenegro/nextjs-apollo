@@ -30,6 +30,7 @@ const SIGNUP_MUTATION = gql`
       lastname
       username
       websiteurl
+      createdAt
     }
   }
 `

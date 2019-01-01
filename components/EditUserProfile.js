@@ -44,24 +44,18 @@ const UPDATE_USER = gql`
 
 class EditUserProfile extends React.Component {
   state = {
+    id: this.props.data.me.id,
+    name: this.props.data.me.name,
+    lastname: this.props.data.me.lastname,
+    email: this.props.data.me.email,
+    websiteurl: this.props.data.me.websiteurl,
+    urlProfilePicture: this.props.data.me.urlProfilePicture,
+    idUrlProfilePicture: this.props.data.me.idUrlProfilePicture,
+    image: '',
     message: '',
     error: false,
     success: false,
     loading: false
-  }
-
-  componentDidMount() {
-    //set data from apollo props
-    this.setState({
-      id: this.props.data.me.id,
-      name: this.props.data.me.name,
-      lastname: this.props.data.me.lastname,
-      email: this.props.data.me.email,
-      websiteurl: this.props.data.me.websiteurl,
-      urlProfilePicture: this.props.data.me.urlProfilePicture,
-      idUrlProfilePicture: this.props.data.me.idUrlProfilePicture,
-      image: ''
-    })
   }
 
   handleChange = event => {
