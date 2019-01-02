@@ -1,9 +1,9 @@
 import PleaseSignin from 'Components/PleaseSignin'
-import CreateItem from 'Components/CreateItem'
+import ComponentItem from 'Components/Item'
 
 const Item = () => (
   <PleaseSignin>
-    <CreateItem />
+    <ComponentItem />
   </PleaseSignin>
 )
 

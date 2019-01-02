@@ -15,7 +15,7 @@ class MyApp extends App {
     return (
       <Container>
         <ApolloProvider client={apollo}>
-          <Page>
+          <Page className="content-body">
             <ToastContainer autoClose={1300} />
             <Component {...pageProps} />
           </Page>

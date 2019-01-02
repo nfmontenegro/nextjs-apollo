@@ -7,8 +7,8 @@ import {Card, Container, Grid, Image} from 'semantic-ui-react'
 import User from './User'
 
 import ProfileName from './styles/ProfileName'
-import ProfileDescription from './styles/ProfileDescription'
 import ButtonEditProfile from './styles/ButtonEditProfile'
+import ProfileDescription from './styles/ProfileDescription'
 
 const ITEMS_BY_USER = gql`
   query itemsByuser($username: String!) {

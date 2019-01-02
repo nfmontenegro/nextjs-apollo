@@ -76,7 +76,7 @@ class Items extends React.Component {
           <Table.Row key={item.id}>
             <Table.Cell>{item.title}</Table.Cell>
             <Table.Cell>{item.description}</Table.Cell>
-            <Table.Cell width={3}>{item.price}</Table.Cell>
+            <Table.Cell width={3}>${item.price}</Table.Cell>
             <Table.Cell width={3}>
               <Button.Group>
                 <Button>Edit</Button>

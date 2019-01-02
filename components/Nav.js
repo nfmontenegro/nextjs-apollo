@@ -25,7 +25,7 @@ const Nav = () => (
               <>
                 <Menu.Item>
                   <Link href="/items">
-                    <Icon name="clipboard outline" />
+                    <a>Publications</a>
                   </Link>
                 </Menu.Item>
               </>
@@ -35,7 +35,7 @@ const Nav = () => (
               {me && (
                 <>
                   <div>
-                    <Link href="/item">
+                    <Link href="/createItem">
                       <NavItem>Create Item</NavItem>
                     </Link>
                   </div>

@@ -44,7 +44,7 @@ function withForm(WrappedComponent, type) {
             await uploadImage(paramsUploadImage)
           }
 
-          await mutation({
+          const response = await mutation({
             variables: {
               ...this.state,
               urlImage: imageUrl ? imageUrl : this.state.urlImage,
@@ -61,7 +61,10 @@ function withForm(WrappedComponent, type) {
           })
 
           return setTimeout(() => {
-            Router.push('/home')
+            Router.push({
+              pathname: '/item',
+              query: {id: response.data.createItem.id}
+            })
           }, 2000)
         }
 
