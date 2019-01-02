@@ -41,7 +41,6 @@ function Signin({form, stateForm}) {
                   name="email"
                   required
                   onChange={form.handleChange}
-                  value={stateForm.email}
                 />
                 <Form.Input
                   type="password"
@@ -51,7 +50,6 @@ function Signin({form, stateForm}) {
                   name="password"
                   required
                   onChange={form.handleChange}
-                  value={stateForm.password}
                 />
               </Form.Group>
               <Message icon success floating attached>

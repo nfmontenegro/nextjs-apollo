@@ -60,7 +60,6 @@ function Signup({form, stateForm}) {
                   width={12}
                   name="name"
                   onChange={form.handleChange}
-                  value={stateForm.name}
                 />
                 <Form.Input
                   label="Last name"
@@ -68,7 +67,6 @@ function Signup({form, stateForm}) {
                   width={12}
                   name="lastname"
                   onChange={form.handleChange}
-                  value={stateForm.lastname}
                 />
               </Form.Group>
               <Form.Group>
@@ -79,7 +77,6 @@ function Signup({form, stateForm}) {
                   name="username"
                   required
                   onChange={form.handleChange}
-                  value={stateForm.username}
                 />
                 <Form.Input
                   label="Website Url"
@@ -87,7 +84,6 @@ function Signup({form, stateForm}) {
                   width={12}
                   name="websiteurl"
                   onChange={form.handleChange}
-                  value={stateForm.websiteurl}
                 />
               </Form.Group>
               <Form.Group>
@@ -99,7 +95,6 @@ function Signup({form, stateForm}) {
                   name="email"
                   required
                   onChange={form.handleChange}
-                  value={stateForm.email}
                 />
                 <Form.Input
                   type="password"
@@ -109,7 +104,6 @@ function Signup({form, stateForm}) {
                   name="password"
                   required
                   onChange={form.handleChange}
-                  value={stateForm.password}
                 />
               </Form.Group>
               <Message icon success floating attached>

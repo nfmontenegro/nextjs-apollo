@@ -1,6 +1,6 @@
 import React from 'react'
 import gql from 'graphql-tag'
-import {withApollo} from 'react-apollo'
+import {Query} from 'react-apollo'
 import {withRouter} from 'next/router'
 import {
   Card,
@@ -44,76 +44,83 @@ const GET_ITEM = gql`
 `
 
 class Item extends React.Component {
-  state = {
-    loading: true
-  }
-
-  async componentDidMount() {
-    return this.props.client
-      .query({
-        query: GET_ITEM,
-        variables: {
-          id: this.props.router.query.id
-        }
-      })
-      .then(({data, loading}) => {
-        this.setState({item: data.item, loading})
-      })
-      .catch(err => console.log(err))
-  }
-
   render() {
     return (
-      <Container style={{marginTop: '100px'}}>
-        {this.state.loading ? (
-          <Segment>
-            <Dimmer active inverted>
-              <Loader size="large">Loading</Loader>
-            </Dimmer>
+      <Query
+        query={GET_ITEM}
+        variables={{
+          id: this.props.router.query.id || ''
+        }}
+      >
+        {({data, loading}) => {
+          return (
+            <Container style={{marginTop: '100px'}}>
+              {loading ? (
+                <Segment>
+                  <Dimmer active inverted>
+                    <Loader size="large">Loading</Loader>
+                  </Dimmer>
 
-            <Image src="https://react.semantic-ui.com/images/wireframe/paragraph.png" />
-          </Segment>
-        ) : (
-          <Card className="profile-card shadow-depth-1">
-            <Grid>
-              <Grid.Column width={5}>
-                <Image
-                  src={
-                    this.state.item.urlImage
-                      ? this.state.item.urlImage
-                      : 'https://react.semantic-ui.com/images/wireframe/image.png'
-                  }
-                />
-              </Grid.Column>
-              <Grid.Column width={6}>
-                <ProfileName>{this.state.item.title.toUpperCase()}</ProfileName>
-                <ButtonEditProfile>EDIT ITEM</ButtonEditProfile>
-              </Grid.Column>
-              <Grid.Column width={5}>
-                <Image src="https://react.semantic-ui.com/images/wireframe/media-paragraph.png" />
-                <ProfileDescription size="18px">
-                  Description: {this.state.item.description}
-                </ProfileDescription>
-                <ProfileDescription size="18px">
-                  Price: ${this.state.item.price}
-                </ProfileDescription>
-                <ProfileDescription size="18px">
-                  Created: {this.state.item.parseDate}
-                </ProfileDescription>
-                <ProfileDescription size="18px">
-                  Created By: {this.state.item.username}
-                </ProfileDescription>
-                <ProfileDescription size="18px">
-                  Full name: {this.state.item.user.name}{' '}
-                  {this.state.item.user.lastname}
-                </ProfileDescription>
-              </Grid.Column>
-            </Grid>
-          </Card>
-        )}
-      </Container>
+                  <Image src="https://react.semantic-ui.com/images/wireframe/paragraph.png" />
+                </Segment>
+              ) : (
+                <Card className="profile-card shadow-depth-1">
+                  <Grid>
+                    <Grid.Column width={5}>
+                      <Image
+                        src={
+                          data.item
+                            ? data.item.urlImage
+                            : 'https://react.semantic-ui.com/images/wireframe/image.png'
+                        }
+                      />
+                    </Grid.Column>
+                    {data.item && (
+                      <>
+                        <Grid.Column width={6}>
+                          <ProfileName>
+                            {data.item.title.toUpperCase()}
+                          </ProfileName>
+                          <ButtonEditProfile>EDIT ITEM</ButtonEditProfile>
+                        </Grid.Column>
+                        <Grid.Column width={5}>
+                          <Image
+                            src={data.item.user.urlProfilePicture}
+                            avatar
+                            size="massive"
+                            style={{
+                              width: '4em',
+                              height: '4em'
+                            }}
+                          />
+                          <ProfileDescription size="18px">
+                            Description: {data.item.description}
+                          </ProfileDescription>
+                          <ProfileDescription size="18px">
+                            Price: ${data.item.price}
+                          </ProfileDescription>
+                          <ProfileDescription size="18px">
+                            Created: {data.item.parseDate}
+                          </ProfileDescription>
+                          <ProfileDescription size="18px">
+                            Created By: {data.item.user.username}
+                          </ProfileDescription>
+                          <ProfileDescription size="18px">
+                            Full name: {data.item.user.name}{' '}
+                            {data.item.user.lastname}
+                          </ProfileDescription>
+                        </Grid.Column>
+                      </>
+                    )}
+                  </Grid>
+                </Card>
+              )}
+            </Container>
+          )
+        }}
+      </Query>
     )
   }
 }
 
-export default withRouter(withApollo(Item))
+export default withRouter(Item)

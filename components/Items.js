@@ -1,5 +1,6 @@
 import React from 'react'
 import gql from 'graphql-tag'
+import Router from 'next/router'
 import sortBy from 'lodash.sortby'
 import {Mutation, Query} from 'react-apollo'
 import {Button, Header, Table} from 'semantic-ui-react'
@@ -69,16 +70,31 @@ class Items extends React.Component {
     })
   }
 
+  itemsDetails = itemId => {
+    Router.push({
+      pathname: '/item',
+      query: {id: itemId}
+    })
+  }
+
   renderItems = (items, me) => {
-    return items.map(item => {
+    return items.map((item, index) => {
       {
         return (
           <Table.Row key={item.id}>
+            <Table.Cell>{index + 1}</Table.Cell>
             <Table.Cell>{item.title}</Table.Cell>
             <Table.Cell>{item.description}</Table.Cell>
             <Table.Cell width={3}>${item.price}</Table.Cell>
             <Table.Cell width={3}>
               <Button.Group>
+                <Button
+                  onClick={() => this.itemsDetails(item.id)}
+                  style={{background: '#e0e1e2', color: '#000'}}
+                >
+                  View
+                </Button>
+                <Button.Or />
                 <Button>Edit</Button>
                 <Button.Or />
                 <Mutation
@@ -106,7 +122,7 @@ class Items extends React.Component {
       <User>
         {({data: {me}}) => (
           <Query query={ITEMS_BY_USER} variables={{username: me.username}}>
-            {({data: {itemsByUser}}) => {
+            {({data: {itemsByUser}, loading}) => {
               return (
                 <>
                   {itemsByUser.length > 0 ? (
@@ -117,6 +133,7 @@ class Items extends React.Component {
                           onClick={this.handleSort('name', itemsByUser)}
                         >
                           <Table.Row>
+                            <Table.HeaderCell>#</Table.HeaderCell>
                             <Table.HeaderCell>Title</Table.HeaderCell>
                             <Table.HeaderCell>Description</Table.HeaderCell>
                             <Table.HeaderCell>Price</Table.HeaderCell>
