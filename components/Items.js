@@ -22,8 +22,8 @@ const DELETE_ITEM_BY_USER = gql`
 `
 
 const ITEMS = gql`
-  query items($username: String!) {
-    items(where: {user: {username: $username}}) {
+  query items($username: String!, $skip: Int, $first: Int) {
+    items(where: {user: {username: $username}}, skip: $skip, first: $first) {
       id
       title
       description
@@ -124,7 +124,10 @@ class Items extends React.Component {
     return (
       <User>
         {({data: {me}}) => (
-          <Query query={ITEMS} variables={{username: me.username}}>
+          <Query
+            query={ITEMS}
+            variables={{username: me.username, skip: 5, first: 5}}
+          >
             {({data: {items}}) => {
               return (
                 <>
