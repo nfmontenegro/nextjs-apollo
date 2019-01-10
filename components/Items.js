@@ -21,24 +21,27 @@ const DELETE_ITEM_BY_USER = gql`
   }
 `
 
-const ITEMS_BY_USER = gql`
-  query itemsByuser($username: String!) {
-    itemsByUser(username: $username) {
+const ITEMS = gql`
+  query items($username: String!) {
+    items(where: {user: {username: $username}}) {
       id
       title
       description
       urlImage
       idUrlImage
       price
+      createdAt
       user {
         id
         name
         lastname
-        username
         email
+        username
         websiteurl
         urlProfilePicture
         idUrlProfilePicture
+        createdAt
+        parseDate
       }
     }
   }
@@ -100,7 +103,7 @@ class Items extends React.Component {
                 <Mutation
                   mutation={DELETE_ITEM_BY_USER}
                   refetchQueries={[
-                    {query: ITEMS_BY_USER, variables: {username: me.username}}
+                    {query: ITEMS, variables: {username: me.username}}
                   ]}
                 >
                   {deleteItem => {
@@ -121,16 +124,16 @@ class Items extends React.Component {
     return (
       <User>
         {({data: {me}}) => (
-          <Query query={ITEMS_BY_USER} variables={{username: me.username}}>
-            {({data: {itemsByUser}, loading}) => {
+          <Query query={ITEMS} variables={{username: me.username}}>
+            {({data: {items}}) => {
               return (
                 <>
-                  {itemsByUser.length > 0 ? (
+                  {items.length > 0 ? (
                     <ContentTable>
                       <Table color={'blue'} className="mt-30">
                         <Table.Header
                           sorted={column === 'name' ? direction : null}
-                          onClick={this.handleSort('name', itemsByUser)}
+                          onClick={this.handleSort('name', items)}
                         >
                           <Table.Row>
                             <Table.HeaderCell>#</Table.HeaderCell>
@@ -140,9 +143,7 @@ class Items extends React.Component {
                             <Table.HeaderCell>Actions</Table.HeaderCell>
                           </Table.Row>
                         </Table.Header>
-                        <Table.Body>
-                          {this.renderItems(itemsByUser, me)}
-                        </Table.Body>
+                        <Table.Body>{this.renderItems(items, me)}</Table.Body>
                       </Table>
                     </ContentTable>
                   ) : (
