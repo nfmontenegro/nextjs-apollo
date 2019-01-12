@@ -10,6 +10,7 @@ import User from './User'
 import DeleteButton from './DeleteButton'
 
 import ContentTable from './styles/ContentTable'
+import ContentPagination from './styles/ContentPagination'
 
 const DELETE_ITEM_BY_USER = gql`
   mutation deleteItem($id: ID!) {
@@ -18,6 +19,16 @@ const DELETE_ITEM_BY_USER = gql`
       title
       description
       createdAt
+    }
+  }
+`
+
+const PAGINATION_QUERY = gql`
+  query PAGINATION_QUERY {
+    itemsConnection {
+      aggregate {
+        count
+      }
     }
   }
 `
@@ -154,33 +165,49 @@ class Items extends React.Component {
                         </Table.Header>
                         <Table.Body>{this.renderItems(items, me)}</Table.Body>
                       </Table>
-                      <Link
-                        prefetch
-                        href={{
-                          pathname: 'items',
-                          query: {page: page - 1}
-                        }}
-                      >
-                        <a className="prev" aria-disabled={page <= 1}>
-                          ← Prev
-                        </a>
-                      </Link>
-                      <p>
-                        Page {page} of
-                        <span className="totalPages">{items.length / 5}</span>
-                      </p>
-                      <p>{items.length} Items Total</p>{' '}
-                      <Link
-                        prefetch
-                        href={{
-                          pathname: 'items',
-                          query: {page: parseInt(page) + 1}
-                        }}
-                      >
-                        <a className="next" aria-disabled={page >= 20}>
-                          Next →
-                        </a>
-                      </Link>
+                      <div style={{textAlign: 'center'}}>
+                        <Query query={PAGINATION_QUERY}>
+                          {({data, loading, error}) => {
+                            if (loading) return <p>Loading...</p>
+                            const count = data.itemsConnection.aggregate.count
+                            const pages = Math.ceil(count / 5)
+                            return (
+                              <ContentPagination>
+                                <Link
+                                  prefetch
+                                  href={{
+                                    pathname: 'items',
+                                    query: {page: page - 1}
+                                  }}
+                                >
+                                  <a className="prev" aria-disabled={page <= 1}>
+                                    ← Prev
+                                  </a>
+                                </Link>
+                                <p>
+                                  Page {page} of
+                                  <span className="totalPages"> {pages}</span>
+                                </p>
+                                <p>{count} Items Total</p>{' '}
+                                <Link
+                                  prefetch
+                                  href={{
+                                    pathname: 'items',
+                                    query: {page: parseInt(page) + 1}
+                                  }}
+                                >
+                                  <a
+                                    className="next"
+                                    aria-disabled={page >= pages}
+                                  >
+                                    Next →
+                                  </a>
+                                </Link>
+                              </ContentPagination>
+                            )
+                          }}
+                        </Query>
+                      </div>
                     </ContentTable>
                   ) : (
                     <Header as="h1" textAlign="center" color="blue">
