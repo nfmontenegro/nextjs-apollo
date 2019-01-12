@@ -1,8 +1,9 @@
 import React from 'react'
+import Link from 'next/link'
 import gql from 'graphql-tag'
-import Router from 'next/router'
 import sortBy from 'lodash.sortby'
 import {Mutation, Query} from 'react-apollo'
+import Router, {withRouter} from 'next/router'
 import {Button, Header, Table} from 'semantic-ui-react'
 
 import User from './User'
@@ -119,16 +120,21 @@ class Items extends React.Component {
   }
 
   render() {
+    const page = this.props.router.query.page
     const {column, direction} = this.state
-
     return (
       <User>
         {({data: {me}}) => (
           <Query
             query={ITEMS}
-            variables={{username: me.username, skip: 5, first: 5}}
+            variables={{
+              username: me.username,
+              skip: page * 5 - 5,
+              first: 5
+            }}
           >
-            {({data: {items}}) => {
+            {({data: {items}, loading}) => {
+              if (loading) return 'Loading..'
               return (
                 <>
                   {items.length > 0 ? (
@@ -148,6 +154,33 @@ class Items extends React.Component {
                         </Table.Header>
                         <Table.Body>{this.renderItems(items, me)}</Table.Body>
                       </Table>
+                      <Link
+                        prefetch
+                        href={{
+                          pathname: 'items',
+                          query: {page: page - 1}
+                        }}
+                      >
+                        <a className="prev" aria-disabled={page <= 1}>
+                          ← Prev
+                        </a>
+                      </Link>
+                      <p>
+                        Page {page} of
+                        <span className="totalPages">{items.length / 5}</span>
+                      </p>
+                      <p>{items.length} Items Total</p>{' '}
+                      <Link
+                        prefetch
+                        href={{
+                          pathname: 'items',
+                          query: {page: parseInt(page) + 1}
+                        }}
+                      >
+                        <a className="next" aria-disabled={page >= 20}>
+                          Next →
+                        </a>
+                      </Link>
                     </ContentTable>
                   ) : (
                     <Header as="h1" textAlign="center" color="blue">
@@ -164,4 +197,4 @@ class Items extends React.Component {
   }
 }
 
-export default Items
+export default withRouter(Items)

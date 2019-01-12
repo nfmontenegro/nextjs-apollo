@@ -24,7 +24,13 @@ const Nav = () => (
             {me && (
               <>
                 <Menu.Item>
-                  <Link href="/items">
+                  <Link
+                    prefetch
+                    href={{
+                      pathname: 'items',
+                      query: {page: 1}
+                    }}
+                  >
                     <a>Publications</a>
                   </Link>
                 </Menu.Item>
