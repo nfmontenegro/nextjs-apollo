@@ -115,12 +115,19 @@ class Items extends React.Component {
                 <Mutation
                   mutation={DELETE_ITEM_BY_USER}
                   refetchQueries={[
-                    {query: ITEMS, variables: {username: me.username}}
+                    {
+                      query: ITEMS,
+                      variables: {
+                        username: me.username,
+                        skip: this.props.router.querypage * 5 - 5,
+                        first: 5
+                      }
+                    }
                   ]}
                 >
-                  {deleteItem => {
-                    return <DeleteButton mutation={deleteItem} item={item} />
-                  }}
+                  {deleteItem => (
+                    <DeleteButton mutation={deleteItem} item={item} />
+                  )}
                 </Mutation>
               </Button.Group>
             </Table.Cell>

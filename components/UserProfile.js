@@ -11,8 +11,8 @@ import ButtonEditProfile from './styles/ButtonEditProfile'
 import ProfileDescription from './styles/ProfileDescription'
 
 const ITEMS_BY_USER = gql`
-  query itemsByuser($username: String!) {
-    itemsByUser(username: $username) {
+  query items($username: String!) {
+    items(where: {user: {username: $username}}) {
       id
       title
       description
@@ -42,7 +42,7 @@ function UserProfile() {
     <User>
       {({data: {me}}) => (
         <Query query={ITEMS_BY_USER} variables={{username: me.username}}>
-          {({data: {itemsByUser}, loading}) => {
+          {({data: {items}, loading}) => {
             return (
               <Container style={{marginTop: '100px'}}>
                 <Card className="profile-card shadow-depth-1">
@@ -68,9 +68,9 @@ function UserProfile() {
                     </Grid.Column>
                     <Grid.Column width={5}>
                       <Image src="https://react.semantic-ui.com/images/wireframe/media-paragraph.png" />
-                      {itemsByUser.length > 0 && (
+                      {items.length > 0 && (
                         <ProfileDescription size="18px">
-                          Publications: {itemsByUser.length}
+                          Publications: {items.length}
                         </ProfileDescription>
                       )}
                       {me.websiteurl && (

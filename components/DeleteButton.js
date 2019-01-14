@@ -25,8 +25,11 @@ class DeleteButton extends React.Component {
     event.preventDefault()
     this.setState({loading: true})
     await this.props.mutation({
-      variables: {id: this.props.item.id}
+      variables: {
+        id: this.props.item.id
+      }
     })
+    this.handleClose()
   }
 
   render() {
