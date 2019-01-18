@@ -18,7 +18,7 @@ import ProfileDescription from './styles/ProfileDescription'
 
 const GET_ITEM = gql`
   query getItem($id: ID!) {
-    item(id: $id) {
+    item(where: {id: $id}) {
       id
       title
       description

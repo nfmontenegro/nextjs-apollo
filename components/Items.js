@@ -92,7 +92,7 @@ class Items extends React.Component {
     })
   }
 
-  renderItems = (items, me) => {
+  renderItems = (items, {username}) => {
     return items.map((item, index) => {
       {
         return (
@@ -114,16 +114,18 @@ class Items extends React.Component {
                 <Button.Or />
                 <Mutation
                   mutation={DELETE_ITEM_BY_USER}
-                  refetchQueries={[
-                    {
-                      query: ITEMS,
-                      variables: {
-                        username: me.username,
-                        skip: this.props.router.querypage * 5 - 5,
-                        first: 5
+                  refetchQueries={() => {
+                    return [
+                      {
+                        query: ITEMS,
+                        variables: {
+                          username: username,
+                          skip: this.props.router.query.page * 5 - 5,
+                          first: 5
+                        }
                       }
-                    }
-                  ]}
+                    ]
+                  }}
                 >
                   {deleteItem => (
                     <DeleteButton mutation={deleteItem} item={item} />
@@ -159,8 +161,8 @@ class Items extends React.Component {
                     <ContentTable>
                       <Table color={'blue'} className="mt-30">
                         <Table.Header
-                          sorted={column === 'name' ? direction : null}
-                          onClick={this.handleSort('name', items)}
+                          sorted={column === 'price' ? direction : null}
+                          onClick={this.handleSort('price', items)}
                         >
                           <Table.Row>
                             <Table.HeaderCell>#</Table.HeaderCell>
