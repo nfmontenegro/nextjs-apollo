@@ -50,7 +50,7 @@ const Nav = () => (
                     <Image
                       style={{marginLeft: '10px'}}
                       src={
-                        me
+                        me.urlProfilePicture
                           ? me.urlProfilePicture
                           : 'https://react.semantic-ui.com/images/wireframe/image.png'
                       }

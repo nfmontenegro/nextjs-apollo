@@ -1,31 +1,35 @@
 import React from 'react'
 import gql from 'graphql-tag'
-import {Button, Container, Form, Icon, Message} from 'semantic-ui-react'
 import {graphql, Mutation} from 'react-apollo'
+import {withRouter} from 'next/router'
+import {Button, Container, Form, Icon, Message} from 'semantic-ui-react'
 
 import withForm from 'HOC/withForm'
 import {CURRENT_USER_QUERY} from './User'
 
 import ContentForm from './styles/ContentForm'
 
-const ITEMS_BY_USER = gql`
-  query itemsByuser($username: String!) {
-    itemsByUser(username: $username) {
+const ITEMS = gql`
+  query items($username: String!, $skip: Int, $first: Int) {
+    items(where: {user: {username: $username}}, skip: $skip, first: $first) {
       id
       title
       description
       urlImage
       idUrlImage
       price
+      createdAt
       user {
         id
         name
         lastname
-        username
         email
+        username
         websiteurl
         urlProfilePicture
         idUrlProfilePicture
+        createdAt
+        parseDate
       }
     }
   }
@@ -51,13 +55,19 @@ const CREATE_ITEM_MUTATION = gql`
 `
 
 function CreateItem({form, stateForm, data}) {
+  console.log(data)
   return (
     <Mutation
       mutation={CREATE_ITEM_MUTATION}
       variables={stateForm}
-      refetchQueries={[
+      refetchQueries={() => [
         {query: CURRENT_USER_QUERY},
-        {query: ITEMS_BY_USER, variables: {username: data.me.username}}
+        {
+          query: ITEMS,
+          variables: {
+            username: data.me.username
+          }
+        }
       ]}
     >
       {(createItem, {loading}) => (
@@ -139,4 +149,4 @@ function CreateItem({form, stateForm, data}) {
 
 const CreateItemWithForm = withForm(CreateItem, 'createItem')
 
-export default graphql(CURRENT_USER_QUERY)(CreateItemWithForm)
+export default withRouter(graphql(CURRENT_USER_QUERY)(CreateItemWithForm))

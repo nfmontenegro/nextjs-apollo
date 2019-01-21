@@ -50,7 +50,7 @@ function UserProfile() {
                     <Grid.Column width={4}>
                       <Image
                         src={
-                          me.urlProfilePicture
+                          me
                             ? me.urlProfilePicture
                             : 'https://react.semantic-ui.com/images/wireframe/image.png'
                         }

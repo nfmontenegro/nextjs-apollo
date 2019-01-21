@@ -24,8 +24,8 @@ const DELETE_ITEM_BY_USER = gql`
 `
 
 const PAGINATION_QUERY = gql`
-  query PAGINATION_QUERY {
-    itemsConnection {
+  query paginationQuery($username: String!) {
+    itemsConnection(where: {user: {username: $username}}) {
       aggregate {
         count
       }
@@ -175,8 +175,13 @@ class Items extends React.Component {
                         <Table.Body>{this.renderItems(items, me)}</Table.Body>
                       </Table>
                       <div style={{textAlign: 'center'}}>
-                        <Query query={PAGINATION_QUERY}>
-                          {({data, loading, error}) => {
+                        <Query
+                          query={PAGINATION_QUERY}
+                          variables={{
+                            username: me.username
+                          }}
+                        >
+                          {({data, loading}) => {
                             if (loading) return <p>Loading...</p>
                             const count = data.itemsConnection.aggregate.count
                             const pages = Math.ceil(count / 5)
@@ -220,7 +225,7 @@ class Items extends React.Component {
                     </ContentTable>
                   ) : (
                     <Header as="h1" textAlign="center" color="blue">
-                      No Items
+                      No items published ☹️
                     </Header>
                   )}
                 </>
