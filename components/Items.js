@@ -61,8 +61,8 @@ const ITEMS = gql`
 
 class Items extends React.Component {
   state = {
-    column: null,
     data: [],
+    column: null,
     direction: null
   }
 
@@ -117,9 +117,15 @@ class Items extends React.Component {
                   refetchQueries={() => {
                     return [
                       {
+                        query: PAGINATION_QUERY,
+                        variables: {
+                          username
+                        }
+                      },
+                      {
                         query: ITEMS,
                         variables: {
-                          username: username,
+                          username,
                           skip: this.props.router.query.page * 5 - 5,
                           first: 5
                         }
