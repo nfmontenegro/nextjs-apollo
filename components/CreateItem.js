@@ -1,7 +1,6 @@
 import React from 'react'
 import gql from 'graphql-tag'
 import {graphql, Mutation} from 'react-apollo'
-import {withRouter} from 'next/router'
 import {Button, Container, Form, Icon, Message} from 'semantic-ui-react'
 
 import withForm from 'HOC/withForm'
@@ -34,6 +33,17 @@ const ITEMS = gql`
     }
   }
 `
+
+const PAGINATION_QUERY = gql`
+  query paginationQuery($username: String!) {
+    itemsConnection(where: {user: {username: $username}}) {
+      aggregate {
+        count
+      }
+    }
+  }
+`
+
 const CREATE_ITEM_MUTATION = gql`
   mutation CREATE_ITEM_MUTATION(
     $title: String!
@@ -55,20 +65,27 @@ const CREATE_ITEM_MUTATION = gql`
 `
 
 function CreateItem({form, stateForm, data}) {
-  console.log(data)
   return (
     <Mutation
       mutation={CREATE_ITEM_MUTATION}
       variables={stateForm}
-      refetchQueries={() => [
-        {query: CURRENT_USER_QUERY},
-        {
-          query: ITEMS,
-          variables: {
-            username: data.me.username
+      refetchQueries={() => {
+        return [
+          {query: CURRENT_USER_QUERY},
+          {
+            query: PAGINATION_QUERY,
+            variables: {
+              username: data.me.username
+            }
+          },
+          {
+            query: ITEMS,
+            variables: {
+              username: data.me.username
+            }
           }
-        }
-      ]}
+        ]
+      }}
     >
       {(createItem, {loading}) => (
         <Container>
@@ -149,4 +166,4 @@ function CreateItem({form, stateForm, data}) {
 
 const CreateItemWithForm = withForm(CreateItem, 'createItem')
 
-export default withRouter(graphql(CURRENT_USER_QUERY)(CreateItemWithForm))
+export default graphql(CURRENT_USER_QUERY)(CreateItemWithForm)
