@@ -1,5 +1,4 @@
 import React from 'react'
-import Link from 'next/link'
 import gql from 'graphql-tag'
 import sortBy from 'lodash.sortby'
 import {Mutation, Query} from 'react-apollo'
@@ -7,10 +6,10 @@ import Router, {withRouter} from 'next/router'
 import {Button, Header, Table} from 'semantic-ui-react'
 
 import User from './User'
+import Pagination from './Pagination'
 import DeleteButton from './DeleteButton'
 
 import ContentTable from './styles/ContentTable'
-import ContentPagination from './styles/ContentPagination'
 
 const DELETE_ITEM_BY_USER = gql`
   mutation deleteItem($id: ID!) {
@@ -192,38 +191,11 @@ class Items extends React.Component {
                             const count = data.itemsConnection.aggregate.count
                             const pages = Math.ceil(count / 5)
                             return (
-                              <ContentPagination>
-                                <Link
-                                  prefetch
-                                  href={{
-                                    pathname: 'items',
-                                    query: {page: page - 1}
-                                  }}
-                                >
-                                  <a className="prev" aria-disabled={page <= 1}>
-                                    ← Prev
-                                  </a>
-                                </Link>
-                                <p>
-                                  Page {page} of
-                                  <span className="totalPages"> {pages}</span>
-                                </p>
-                                <p>{count} Items Total</p>{' '}
-                                <Link
-                                  prefetch
-                                  href={{
-                                    pathname: 'items',
-                                    query: {page: parseInt(page) + 1}
-                                  }}
-                                >
-                                  <a
-                                    className="next"
-                                    aria-disabled={page >= pages}
-                                  >
-                                    Next →
-                                  </a>
-                                </Link>
-                              </ContentPagination>
+                              <Pagination
+                                page={page}
+                                pages={pages}
+                                count={count}
+                              />
                             )
                           }}
                         </Query>
