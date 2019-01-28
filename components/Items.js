@@ -91,6 +91,26 @@ class Items extends React.Component {
     })
   }
 
+  tableItems = (items, me, column, direction) => {
+    return (
+      <Table color={'blue'} className="mt-30">
+        <Table.Header
+          sorted={column === 'price' ? direction : null}
+          onClick={this.handleSort('price', items)}
+        >
+          <Table.Row>
+            <Table.HeaderCell>#</Table.HeaderCell>
+            <Table.HeaderCell>Title</Table.HeaderCell>
+            <Table.HeaderCell>Description</Table.HeaderCell>
+            <Table.HeaderCell>Price</Table.HeaderCell>
+            <Table.HeaderCell>Actions</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>{this.renderItems(items, me)}</Table.Body>
+      </Table>
+    )
+  }
+
   renderItems = (items, {username}) => {
     return items.map((item, index) => {
       {
@@ -125,8 +145,8 @@ class Items extends React.Component {
                         query: ITEMS,
                         variables: {
                           username,
-                          skip: this.props.router.query.page * 5 - 5,
-                          first: 5
+                          skip: this.props.router.query.page * 10 - 10,
+                          first: 10
                         }
                       }
                     ]
@@ -154,8 +174,8 @@ class Items extends React.Component {
             query={ITEMS}
             variables={{
               username: me.username,
-              skip: page * 5 - 5,
-              first: 5
+              skip: page * 10 - 10,
+              first: 10
             }}
           >
             {({data: {items}, loading}) => {
@@ -164,21 +184,7 @@ class Items extends React.Component {
                 <>
                   {items.length > 0 ? (
                     <ContentTable>
-                      <Table color={'blue'} className="mt-30">
-                        <Table.Header
-                          sorted={column === 'price' ? direction : null}
-                          onClick={this.handleSort('price', items)}
-                        >
-                          <Table.Row>
-                            <Table.HeaderCell>#</Table.HeaderCell>
-                            <Table.HeaderCell>Title</Table.HeaderCell>
-                            <Table.HeaderCell>Description</Table.HeaderCell>
-                            <Table.HeaderCell>Price</Table.HeaderCell>
-                            <Table.HeaderCell>Actions</Table.HeaderCell>
-                          </Table.Row>
-                        </Table.Header>
-                        <Table.Body>{this.renderItems(items, me)}</Table.Body>
-                      </Table>
+                      {this.tableItems(items, me, column, direction)}
                       <div style={{textAlign: 'center'}}>
                         <Query
                           query={PAGINATION_QUERY}
@@ -189,7 +195,7 @@ class Items extends React.Component {
                           {({data, loading}) => {
                             if (loading) return <p>Loading...</p>
                             const count = data.itemsConnection.aggregate.count
-                            const pages = Math.ceil(count / 5)
+                            const pages = Math.ceil(count / 10)
                             return (
                               <Pagination
                                 page={page}
