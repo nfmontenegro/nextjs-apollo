@@ -44,6 +44,39 @@ const GET_ITEM = gql`
 `
 
 class Item extends React.Component {
+  state = {}
+
+  profileDescription = ({item}) => {
+    return (
+      <>
+        <Image
+          src={item.user.urlProfilePicture}
+          avatar
+          size="massive"
+          style={{
+            width: '4em',
+            height: '4em'
+          }}
+        />
+        <ProfileDescription size="18px">
+          Description: {item.description}
+        </ProfileDescription>
+        <ProfileDescription size="18px">
+          Price: ${item.price}
+        </ProfileDescription>
+        <ProfileDescription size="18px">
+          Created: {item.parseDate}
+        </ProfileDescription>
+        <ProfileDescription size="18px">
+          Created By: {item.user.username}
+        </ProfileDescription>
+        <ProfileDescription size="18px">
+          Full name: {item.user.name} {item.user.lastname}
+        </ProfileDescription>
+      </>
+    )
+  }
+
   render() {
     return (
       <Query
@@ -84,31 +117,7 @@ class Item extends React.Component {
                           <ButtonEditProfile>EDIT ITEM</ButtonEditProfile>
                         </Grid.Column>
                         <Grid.Column width={5}>
-                          <Image
-                            src={data.item.user.urlProfilePicture}
-                            avatar
-                            size="massive"
-                            style={{
-                              width: '4em',
-                              height: '4em'
-                            }}
-                          />
-                          <ProfileDescription size="18px">
-                            Description: {data.item.description}
-                          </ProfileDescription>
-                          <ProfileDescription size="18px">
-                            Price: ${data.item.price}
-                          </ProfileDescription>
-                          <ProfileDescription size="18px">
-                            Created: {data.item.parseDate}
-                          </ProfileDescription>
-                          <ProfileDescription size="18px">
-                            Created By: {data.item.user.username}
-                          </ProfileDescription>
-                          <ProfileDescription size="18px">
-                            Full name: {data.item.user.name}{' '}
-                            {data.item.user.lastname}
-                          </ProfileDescription>
+                          {profileDescription(data)}
                         </Grid.Column>
                       </>
                     )}

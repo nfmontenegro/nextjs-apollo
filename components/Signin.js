@@ -15,6 +15,27 @@ const SIGNIN_MUTATION = gql`
   }
 `
 
+function message(loading, stateForm) {
+  return (
+    <>
+      <Message icon success floating attached>
+        <Icon name="circle notched" loading={loading} />
+        <Message.Content>
+          <Message.Header>Just one second</Message.Header>
+          We are fetching that content for you.
+        </Message.Content>
+      </Message>
+      <Message
+        error
+        attached
+        floating
+        header="Forbidden Server"
+        content={stateForm.message}
+      />
+    </>
+  )
+}
+
 function Signin({form, stateForm}) {
   return (
     <Mutation
@@ -52,20 +73,7 @@ function Signin({form, stateForm}) {
                   onChange={form.handleChange}
                 />
               </Form.Group>
-              <Message icon success floating attached>
-                <Icon name="circle notched" loading={loading} />
-                <Message.Content>
-                  <Message.Header>Just one second</Message.Header>
-                  We are fetching that content for you.
-                </Message.Content>
-              </Message>
-              <Message
-                error
-                attached
-                floating
-                header="Forbidden Server"
-                content={stateForm.message}
-              />
+              {message(loading, stateForm)}
               <br />
               <Button type="submit" disabled={stateForm.success}>
                 LOGIN

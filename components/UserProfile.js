@@ -37,6 +37,27 @@ function editProfile(userId) {
   Router.push(`/updateProfile?id=${userId}`)
 }
 
+function userProfile(items, me) {
+  return (
+    <>
+      <Image src="https://react.semantic-ui.com/images/wireframe/media-paragraph.png" />
+      {items.length > 0 && (
+        <ProfileDescription size="18px">
+          Publications: {items.length}
+        </ProfileDescription>
+      )}
+      {me.websiteurl && (
+        <ProfileDescription size="18px">
+          Website: {me.websiteurl}
+        </ProfileDescription>
+      )}
+      <ProfileDescription size="18px">
+        Joined: {me.parseDate}
+      </ProfileDescription>
+    </>
+  )
+}
+
 function UserProfile() {
   return (
     <User>
@@ -67,20 +88,7 @@ function UserProfile() {
                       </>
                     </Grid.Column>
                     <Grid.Column width={5}>
-                      <Image src="https://react.semantic-ui.com/images/wireframe/media-paragraph.png" />
-                      {items.length > 0 && (
-                        <ProfileDescription size="18px">
-                          Publications: {items.length}
-                        </ProfileDescription>
-                      )}
-                      {me.websiteurl && (
-                        <ProfileDescription size="18px">
-                          Website: {me.websiteurl}
-                        </ProfileDescription>
-                      )}
-                      <ProfileDescription size="18px">
-                        Joined: {me.parseDate}
-                      </ProfileDescription>
+                      {userProfileImage(items, me)}
                     </Grid.Column>
                   </Grid>
                 </Card>
