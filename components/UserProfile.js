@@ -37,7 +37,7 @@ function editProfile(userId) {
   Router.push(`/updateProfile?id=${userId}`)
 }
 
-function userProfile(items, me) {
+function userProfileImage(items, me) {
   return (
     <>
       <Image src="https://react.semantic-ui.com/images/wireframe/media-paragraph.png" />
