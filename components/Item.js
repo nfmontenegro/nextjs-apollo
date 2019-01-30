@@ -117,7 +117,7 @@ class Item extends React.Component {
                           <ButtonEditProfile>EDIT ITEM</ButtonEditProfile>
                         </Grid.Column>
                         <Grid.Column width={5}>
-                          {profileDescription(data)}
+                          {this.profileDescription(data)}
                         </Grid.Column>
                       </>
                     )}
