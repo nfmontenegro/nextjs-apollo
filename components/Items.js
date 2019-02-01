@@ -32,7 +32,7 @@ const PAGINATION_QUERY = gql`
   }
 `
 
-const ITEMS = gql`
+export const ITEMS = gql`
   query items($username: String!, $skip: Int, $first: Int) {
     items(where: {user: {username: $username}}, skip: $skip, first: $first) {
       id

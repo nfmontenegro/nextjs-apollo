@@ -3,36 +3,11 @@ import gql from 'graphql-tag'
 import {graphql, Mutation} from 'react-apollo'
 import {Button, Container, Form, Icon, Message} from 'semantic-ui-react'
 
-import withForm from 'HOC/withForm'
+import {ITEMS} from './Items'
 import {CURRENT_USER_QUERY} from './User'
+import withForm from 'HOC/withForm'
 
 import ContentForm from './styles/ContentForm'
-
-const ITEMS = gql`
-  query items($username: String!, $skip: Int, $first: Int) {
-    items(where: {user: {username: $username}}, skip: $skip, first: $first) {
-      id
-      title
-      description
-      urlImage
-      idUrlImage
-      price
-      createdAt
-      user {
-        id
-        name
-        lastname
-        email
-        username
-        websiteurl
-        urlProfilePicture
-        idUrlProfilePicture
-        createdAt
-        parseDate
-      }
-    }
-  }
-`
 
 const PAGINATION_QUERY = gql`
   query paginationQuery($username: String!) {
@@ -166,4 +141,4 @@ function CreateItem({form, stateForm, data}) {
 
 const CreateItemWithForm = withForm(CreateItem, 'createItem')
 
-export default graphql(CURRENT_USER_QUERY)(CreateItemWithForm)
+export default graphql(CURRENT_USER_QUERY, ITEMS)(CreateItemWithForm)
