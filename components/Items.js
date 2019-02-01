@@ -22,7 +22,7 @@ const DELETE_ITEM_BY_USER = gql`
   }
 `
 
-const PAGINATION_QUERY = gql`
+export const PAGINATION_QUERY = gql`
   query paginationQuery($username: String!) {
     itemsConnection(where: {user: {username: $username}}) {
       aggregate {

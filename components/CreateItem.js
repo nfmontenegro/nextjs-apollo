@@ -4,20 +4,11 @@ import {graphql, Mutation} from 'react-apollo'
 import {Button, Container, Form, Icon, Message} from 'semantic-ui-react'
 
 import {ITEMS} from './Items'
+import {PAGINATION_QUERY} from './Items'
 import {CURRENT_USER_QUERY} from './User'
 import withForm from 'HOC/withForm'
 
 import ContentForm from './styles/ContentForm'
-
-const PAGINATION_QUERY = gql`
-  query paginationQuery($username: String!) {
-    itemsConnection(where: {user: {username: $username}}) {
-      aggregate {
-        count
-      }
-    }
-  }
-`
 
 const CREATE_ITEM_MUTATION = gql`
   mutation CREATE_ITEM_MUTATION(
@@ -141,4 +132,6 @@ function CreateItem({form, stateForm, data}) {
 
 const CreateItemWithForm = withForm(CreateItem, 'createItem')
 
-export default graphql(CURRENT_USER_QUERY, ITEMS)(CreateItemWithForm)
+export default graphql(CURRENT_USER_QUERY, ITEMS, PAGINATION_QUERY)(
+  CreateItemWithForm
+)
