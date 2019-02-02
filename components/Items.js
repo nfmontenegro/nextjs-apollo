@@ -87,7 +87,9 @@ class Items extends React.Component {
   itemsDetails = itemId => {
     Router.push({
       pathname: '/item',
-      query: {id: itemId}
+      query: {
+        id: itemId
+      }
     })
   }
 
@@ -111,6 +113,10 @@ class Items extends React.Component {
     )
   }
 
+  renderEditItem = itemID => {
+    Router.push(`/updateItem?itemID=${itemID}`)
+  }
+
   renderItems = (items, {username}) => {
     return items.map((item, index) => {
       {
@@ -129,7 +135,9 @@ class Items extends React.Component {
                   View
                 </Button>
                 <Button.Or />
-                <Button>Edit</Button>
+                <Button onClick={() => this.renderEditItem(item.id)}>
+                  Edit
+                </Button>
                 <Button.Or />
                 <Mutation
                   mutation={DELETE_ITEM_BY_USER}

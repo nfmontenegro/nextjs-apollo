@@ -1,7 +1,7 @@
 import React from 'react'
 import gql from 'graphql-tag'
 import {Query} from 'react-apollo'
-import {withRouter} from 'next/router'
+import Router, {withRouter} from 'next/router'
 import {
   Card,
   Container,
@@ -77,6 +77,10 @@ class Item extends React.Component {
     )
   }
 
+  renderEditItem = itemID => {
+    Router.push(`/updateItem?itemID=${itemID}`)
+  }
+
   render() {
     return (
       <Query
@@ -114,7 +118,13 @@ class Item extends React.Component {
                           <ProfileName>
                             {data.item.title.toUpperCase()}
                           </ProfileName>
-                          <ButtonEditProfile>EDIT ITEM</ButtonEditProfile>
+                          <ButtonEditProfile
+                            onClick={() =>
+                              this.renderEditItem(this.props.router.query.id)
+                            }
+                          >
+                            EDIT ITEM
+                          </ButtonEditProfile>
                         </Grid.Column>
                         <Grid.Column width={5}>
                           {this.profileDescription(data)}
