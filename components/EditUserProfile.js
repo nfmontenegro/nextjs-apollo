@@ -3,9 +3,10 @@ import gql from 'graphql-tag'
 import Router from 'next/router'
 import getConfig from 'next/config'
 import {graphql, Mutation} from 'react-apollo'
-import {Button, Container, Form, Icon, Message} from 'semantic-ui-react'
+import {Button, Container, Form} from 'semantic-ui-react'
 
 import User from './User'
+import CustomMessage from './CustomMessage'
 import {CURRENT_USER_QUERY} from './User'
 
 import {uploadImage, deleteImage} from 'Services/aws'
@@ -191,22 +192,9 @@ class EditUserProfile extends React.Component {
                           onChange={this.handleUploadFile}
                         />
                       </Form.Group>
-                      <Message icon success floating attached>
-                        <Icon name="circle notched" loading={loading} />
-                        <Message.Content>
-                          <Message.Header>
-                            Just one second, We are fetching that content for
-                            you.
-                          </Message.Header>
-                          {this.state.message}
-                        </Message.Content>
-                      </Message>
-                      <Message
-                        error
-                        attached
-                        floating
-                        header="Forbidden Server"
-                        content={this.state.message}
+                      <CustomMessage
+                        loading={loading}
+                        message={this.state.message}
                       />
                       <br />
                       <Button type="submit">EDIT PROFILE</Button>

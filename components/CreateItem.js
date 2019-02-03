@@ -1,11 +1,12 @@
 import React from 'react'
 import gql from 'graphql-tag'
-import {graphql, Mutation} from 'react-apollo'
-import {Button, Container, Form, Icon, Message} from 'semantic-ui-react'
+import {graphql, Mutation, compose} from 'react-apollo'
+import {Button, Container, Form, Item} from 'semantic-ui-react'
 
 import {ITEMS} from './Items'
 import {PAGINATION_QUERY} from './Items'
 import {CURRENT_USER_QUERY} from './User'
+import CustomMessage from './CustomMessage'
 import withForm from 'HOC/withForm'
 
 import ContentForm from './styles/ContentForm'
@@ -104,20 +105,7 @@ function CreateItem({form, stateForm, data}) {
                 />
                 <Form.Input type="hidden" required value={data.me.username} />
               </Form.Group>
-              <Message icon success floating attached>
-                <Icon name="circle notched" loading={loading} />
-                <Message.Content>
-                  <Message.Header>Just one second</Message.Header>
-                  We are fetching that content for you.
-                </Message.Content>
-              </Message>
-              <Message
-                error
-                attached
-                floating
-                header="Forbidden Server"
-                content={stateForm.message}
-              />
+              <CustomMessage loading={loading} message={stateForm.message} />
               <br />
               <Button type="submit" disabled={stateForm.success}>
                 Create Item

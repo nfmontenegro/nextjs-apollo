@@ -1,8 +1,9 @@
 import React from 'react'
 import gql from 'graphql-tag'
-import {Button, Container, Form, Icon, Message} from 'semantic-ui-react'
+import {Button, Container, Form} from 'semantic-ui-react'
 import {Mutation} from 'react-apollo'
 
+import CustomMessage from './CustomMessage'
 import {CURRENT_USER_QUERY} from './User'
 import withForm from 'HOC/withForm'
 import ContentForm from './styles/ContentForm'
@@ -106,18 +107,7 @@ function Signup({form, stateForm}) {
                   onChange={form.handleChange}
                 />
               </Form.Group>
-              <Message icon success floating attached>
-                <Icon name="circle notched" loading={loading} />
-                <Message.Content>
-                  <Message.Header>Just one second</Message.Header>
-                  We are fetching that content for you.
-                </Message.Content>
-              </Message>
-              <Message
-                error
-                header="Forbidden Server"
-                content={stateForm.message}
-              />
+              <CustomMessage loading={loading} message={stateForm.message} />
               <br />
               <Button type="submit">REGISTER</Button>
             </Form>
