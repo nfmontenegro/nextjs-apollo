@@ -7,6 +7,7 @@ import {Button, Container, Form} from 'semantic-ui-react'
 import CustomMessage from './CustomMessage'
 
 import ContentForm from './styles/ContentForm'
+import withEditForm from '../hoc/withEditForm'
 
 const ITEM = gql`
   query getItem($id: ID!) {
@@ -52,25 +53,12 @@ class EditItem extends React.Component {
       }
     })
 
-    this.setState({
-      ...data.item
-    })
+    this.props.form.chargeData(data)
   }
-
-  handleChange = event => {
-    const {value, name} = event.target
-    this.setState({
-      [name]: value
-    })
-  }
-
-  handleUploadFile = event =>
-    this.setState({
-      image: event.target.files[0]
-    })
 
   render() {
-    console.log(this.state)
+    const {handleSubmit, handleChange, handleUploadFile} = this.props.form
+    //Mutation update item
     return (
       <>
         <Container>
@@ -81,17 +69,16 @@ class EditItem extends React.Component {
               error={this.state.error}
               success={this.state.success}
               loading={this.state.loading}
-              onSubmit={e => form.handleSubmit(e, createItem)}
+              onSubmit={e => handleSubmit(e, createItem)}
             >
               <Form.Group>
                 <Form.Input
                   label="Title"
                   placeholder="Title"
                   width={12}
-                  name="title"
-                  required
-                  onChange={this.handleChange}
-                  value={this.state.title || ''}
+                  value={this.props.stateForm.title}
+                  name="name"
+                  onChange={handleChange}
                 />
                 <Form.Input
                   label="Description"
@@ -99,8 +86,8 @@ class EditItem extends React.Component {
                   width={12}
                   name="description"
                   required
-                  onChange={this.handleChange}
-                  value={this.state.description || ''}
+                  onChange={handleChange}
+                  value={this.props.stateForm.description}
                 />
               </Form.Group>
               <Form.Group>
@@ -110,7 +97,7 @@ class EditItem extends React.Component {
                   width={12}
                   name="image"
                   required
-                  onChange={this.handleUploadFile}
+                  onChange={handleUploadFile}
                 />
                 <Form.Input
                   label="Price"
@@ -118,8 +105,8 @@ class EditItem extends React.Component {
                   width={12}
                   name="price"
                   required
-                  onChange={this.handleChange}
-                  value={this.state.price}
+                  onChange={handleChange}
+                  value={this.props.stateForm.price}
                 />
               </Form.Group>
               <CustomMessage loading={false} message={this.state.message} />
@@ -135,7 +122,9 @@ class EditItem extends React.Component {
   }
 }
 
+const EditItemWithForm = withEditForm(EditItem)
+
 export default compose(
   withRouter,
   withApollo
-)(EditItem)
+)(EditItemWithForm)
