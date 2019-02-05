@@ -5,7 +5,7 @@ import {uploadImage} from 'Services/aws'
 
 const {publicRuntimeConfig} = getConfig()
 
-function withEditForm(WrappedComponent) {
+function withEditForm(WrappedComponent, type) {
   return class extends React.Component {
     state = {
       message: '',
@@ -14,9 +14,9 @@ function withEditForm(WrappedComponent) {
       loading: false
     }
 
-    chargeData = data => {
+    loadFormData = data => {
       this.setState({
-        ...data.item
+        ...data
       })
     }
 
@@ -60,9 +60,7 @@ function withEditForm(WrappedComponent) {
         await updateMutation({
           variables: {
             ...this.state,
-            urlProfilePicture: imageUrl
-              ? imageUrl
-              : this.state.urlProfilePicture,
+            urlImage: imageUrl ? imageUrl : this.state.urlProfilePicture,
             idUrlProfilePicture: paramsUploadImage
               ? paramsUploadImage.Key
               : this.state.idUrlProfilePicture
@@ -76,9 +74,15 @@ function withEditForm(WrappedComponent) {
           loading: false
         })
 
-        setTimeout(() => {
-          Router.push(`/profile?id=${this.state.id}`)
-        }, 2000)
+        if (type == 'editItem') {
+          setTimeout(() => {
+            Router.push(`/item?id=${this.state.id}`)
+          }, 2000)
+        } else {
+          setTimeout(() => {
+            Router.push(`/profile?id=${this.state.id}`)
+          }, 2000)
+        }
       } catch (err) {
         this.setState({message: err.message, error: true, loading: false})
       }
@@ -96,9 +100,8 @@ function withEditForm(WrappedComponent) {
         handleChange: this.handleChange,
         handleSubmit: this.handleSubmit,
         handleUploadFile: this.handleUploadFile,
-        chargeData: this.chargeData
+        loadFormData: this.loadFormData
       }
-      console.log('State:', this.state)
       return (
         <WrappedComponent
           form={formProps}

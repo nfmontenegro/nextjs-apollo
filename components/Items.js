@@ -181,7 +181,7 @@ class Items extends React.Component {
           <Query
             query={ITEMS}
             variables={{
-              username: me.username,
+              username: me ? me.username : '',
               skip: page * 10 - 10,
               first: 10
             }}

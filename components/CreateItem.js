@@ -48,7 +48,9 @@ function CreateItem({form, stateForm, data}) {
           {
             query: ITEMS,
             variables: {
-              username: data.me.username
+              username: data.me.username,
+              skip: 0,
+              first: 10
             }
           }
         ]

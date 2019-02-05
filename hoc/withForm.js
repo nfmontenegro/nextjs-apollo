@@ -76,9 +76,12 @@ function withForm(WrappedComponent, type) {
         if (type === 'signin') {
           // Force a reload of all the current queries now that the user is
           // logged in
-          return this.props.client.cache.reset().then(() => {
-            Router.push('/')
-          })
+          return this.props.client.cache
+            .reset()
+            .then(() => {
+              Router.push('/')
+            })
+            .catch(err => console.log('Err:', err))
         }
 
         if (type === 'signup') {

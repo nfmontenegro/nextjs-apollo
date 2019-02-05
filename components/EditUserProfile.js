@@ -1,20 +1,15 @@
 import React from 'react'
 import gql from 'graphql-tag'
-import Router from 'next/router'
-import getConfig from 'next/config'
-import {graphql, Mutation} from 'react-apollo'
+import {graphql, Mutation, compose} from 'react-apollo'
 import {Button, Container, Form} from 'semantic-ui-react'
 
 import User from './User'
 import CustomMessage from './CustomMessage'
 import {CURRENT_USER_QUERY} from './User'
 
-import {uploadImage, deleteImage} from 'Services/aws'
-
+import withEditForm from 'HOC/withEditForm'
 import ContentForm from './styles/ContentForm'
 import ProfileName from './styles/ProfileName'
-
-const {publicRuntimeConfig} = getConfig()
 
 const UPDATE_USER = gql`
   mutation updateUser(
@@ -44,32 +39,38 @@ const UPDATE_USER = gql`
 `
 
 class EditUserProfile extends React.Component {
-  state = {
-    id: this.props.data.me.id,
-    name: this.props.data.me.name,
-    lastname: this.props.data.me.lastname,
-    email: this.props.data.me.email,
-    websiteurl: this.props.data.me.websiteurl,
-    urlProfilePicture: this.props.data.me.urlProfilePicture,
-    idUrlProfilePicture: this.props.data.me.idUrlProfilePicture,
-    image: '',
-    message: '',
-    error: false,
-    success: false,
-    loading: false
+  // state = {
+  //   id: this.props.data.me.id,
+  //   name: this.props.data.me.name,
+  //   lastname: this.props.data.me.lastname,
+  //   email: this.props.data.me.email,
+  //   websiteurl: this.props.data.me.websiteurl,
+  //   urlProfilePicture: this.props.data.me.urlProfilePicture,
+  //   idUrlProfilePicture: this.props.data.me.idUrlProfilePicture,
+  //   image: '',
+  //   message: '',
+  //   error: false,
+  //   success: false,
+  //   loading: false
+  // }
+
+  async componentDidMount() {
+    console.log(this.props)
+    this.props.form.loadFormData(this.props.data.me)
   }
 
   render() {
+    const {handleSubmit, handleChange, handleUploadFile} = this.props.form
     return (
       <User>
         {({data: {me}}) => {
           return (
             <Mutation
               mutation={UPDATE_USER}
-              variables={this.state}
+              variables={this.props.stateForm}
               refetchQueries={[{query: CURRENT_USER_QUERY}]}
             >
-              {(updateUser, {loading}) => (
+              {updateUser => (
                 <Container>
                   <ProfileName size="48px" align="center" marginTop="40px">
                     Settings for{' '}
@@ -81,25 +82,25 @@ class EditUserProfile extends React.Component {
                     <Form
                       id="form"
                       method="POST"
-                      error={this.state.error}
-                      success={this.state.success}
-                      loading={this.state.loading}
-                      onSubmit={e => this.handleSubmit(e, updateUser)}
+                      error={this.props.stateForm.error}
+                      success={this.props.stateForm.success}
+                      loading={this.props.stateForm.loading}
+                      onSubmit={e => handleSubmit(e, updateUser)}
                     >
                       <Form.Group>
                         <Form.Input
                           label="Name"
                           width={8}
-                          value={this.state.name || ''}
+                          value={this.props.stateForm.name}
                           name="name"
-                          onChange={this.handleChange}
+                          onChange={handleChange}
                         />
                         <Form.Input
                           label="Last Name"
                           width={8}
                           name="lastname"
-                          value={this.state.lastname || ''}
-                          onChange={this.handleChange}
+                          value={this.props.stateForm.lastname}
+                          onChange={handleChange}
                         />
                       </Form.Group>
                       <Form.Group>
@@ -107,20 +108,20 @@ class EditUserProfile extends React.Component {
                           label="Web Site Url"
                           width={8}
                           name="websiteurl"
-                          value={this.state.websiteurl || ''}
-                          onChange={this.handleChange}
+                          value={this.props.stateForm.websiteurl}
+                          onChange={handleChange}
                         />
                         <Form.Input
                           type="file"
                           label="Avatar"
                           width={8}
                           name="urlProfilePicture"
-                          onChange={this.handleUploadFile}
+                          onChange={handleUploadFile}
                         />
                       </Form.Group>
                       <CustomMessage
-                        loading={loading}
-                        message={this.state.message}
+                        loading={this.props.stateForm.loading}
+                        message={this.props.stateForm.message}
                       />
                       <br />
                       <Button type="submit">EDIT PROFILE</Button>
@@ -136,4 +137,6 @@ class EditUserProfile extends React.Component {
   }
 }
 
-export default graphql(CURRENT_USER_QUERY)(EditUserProfile)
+const EditUserWithForm = withEditForm(EditUserProfile, 'editUser')
+
+export default graphql(CURRENT_USER_QUERY)(EditUserWithForm)
