@@ -11,6 +11,22 @@ import withEditForm from 'HOC/withEditForm'
 import ContentForm from './styles/ContentForm'
 import ProfileName from './styles/ProfileName'
 
+const SUBSCRIPTION_USER = gql`
+  subscription test {
+    updateUser(where: {mutation_in: [UPDATED]}) {
+      mutation
+      node {
+        name
+        lastname
+        username
+        websiteurl
+        urlProfilePicture
+        idUrlProfilePicture
+      }
+    }
+  }
+`
+
 const UPDATE_USER = gql`
   mutation updateUser(
     $id: ID!
@@ -39,21 +55,6 @@ const UPDATE_USER = gql`
 `
 
 class EditUserProfile extends React.Component {
-  // state = {
-  //   id: this.props.data.me.id,
-  //   name: this.props.data.me.name,
-  //   lastname: this.props.data.me.lastname,
-  //   email: this.props.data.me.email,
-  //   websiteurl: this.props.data.me.websiteurl,
-  //   urlProfilePicture: this.props.data.me.urlProfilePicture,
-  //   idUrlProfilePicture: this.props.data.me.idUrlProfilePicture,
-  //   image: '',
-  //   message: '',
-  //   error: false,
-  //   success: false,
-  //   loading: false
-  // }
-
   async componentDidMount() {
     console.log(this.props)
     this.props.form.loadFormData(this.props.data.me)
@@ -65,11 +66,7 @@ class EditUserProfile extends React.Component {
       <User>
         {({data: {me}}) => {
           return (
-            <Mutation
-              mutation={UPDATE_USER}
-              variables={this.props.stateForm}
-              refetchQueries={[{query: CURRENT_USER_QUERY}]}
-            >
+            <Mutation mutation={UPDATE_USER} variables={this.props.stateForm}>
               {updateUser => (
                 <Container>
                   <ProfileName size="48px" align="center" marginTop="40px">
