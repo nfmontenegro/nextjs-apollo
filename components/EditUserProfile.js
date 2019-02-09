@@ -55,8 +55,7 @@ const UPDATE_USER = gql`
 `
 
 class EditUserProfile extends React.Component {
-  async componentDidMount() {
-    console.log(this.props)
+  componentDidMount() {
     this.props.form.loadFormData(this.props.data.me)
   }
 
