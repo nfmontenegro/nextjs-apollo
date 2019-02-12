@@ -56,7 +56,7 @@ function CreateItem({form, stateForm, data}) {
         ]
       }}
     >
-      {(createItem, {loading}) => (
+      {createItem => (
         <Container>
           <ContentForm className="shadow-depth-1">
             <Form
@@ -107,7 +107,10 @@ function CreateItem({form, stateForm, data}) {
                 />
                 <Form.Input type="hidden" required value={data.me.username} />
               </Form.Group>
-              <CustomMessage loading={loading} message={stateForm.message} />
+              <CustomMessage
+                loading={stateForm.loading}
+                message={stateForm.message}
+              />
               <br />
               <Button type="submit" disabled={stateForm.success}>
                 Create Item

@@ -62,10 +62,11 @@ const UPDATE_ITEM = gql`
 
 class EditItem extends React.Component {
   async componentDidMount() {
+    const id = this.props.router.query.itemID
     const {data} = await this.props.client.query({
       query: ITEM,
       variables: {
-        id: this.props.router.query.itemID
+        id
       }
     })
 
@@ -76,7 +77,7 @@ class EditItem extends React.Component {
     const {handleSubmit, handleChange, handleUploadFile} = this.props.form
     return (
       <Mutation mutation={UPDATE_ITEM} variables={this.props.stateForm}>
-        {(updateItem, {loading}) => (
+        {updateItem => (
           <Container>
             <ContentForm className="shadow-depth-1">
               <Form
