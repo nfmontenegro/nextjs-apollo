@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import {Dropdown, Icon, Image, Menu} from 'semantic-ui-react'
+import {Dropdown, Image, Menu} from 'semantic-ui-react'
 
 import User from './User'
 import Signout from './Signout'
