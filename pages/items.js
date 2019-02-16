@@ -1,9 +1,9 @@
 import PleaseSignin from 'Components/PleaseSignin'
-import Items from 'Components/Items'
+import ItemsByUser from 'Components/ItemsByUser'
 
 const Item = () => (
   <PleaseSignin>
-    <Items />
+    <ItemsByUser />
   </PleaseSignin>
 )
 
