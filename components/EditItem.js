@@ -4,6 +4,7 @@ import {withRouter} from 'next/router'
 import {Mutation, withApollo, compose} from 'react-apollo'
 import {Button, Container, Form} from 'semantic-ui-react'
 
+import User from './User'
 import CustomMessage from './CustomMessage'
 
 import ContentForm from './styles/ContentForm'
@@ -76,66 +77,73 @@ class EditItem extends React.Component {
   render() {
     const {handleSubmit, handleChange, handleUploadFile} = this.props.form
     return (
-      <Mutation mutation={UPDATE_ITEM} variables={this.props.stateForm}>
-        {updateItem => (
-          <Container>
-            <ContentForm className="shadow-depth-1">
-              <Form
-                id="form"
-                method="POST"
-                error={this.props.stateForm.error}
-                success={this.props.stateForm.success}
-                loading={this.props.stateForm.loading}
-                onSubmit={e => handleSubmit(e, updateItem)}
-              >
-                <Form.Group>
-                  <Form.Input
-                    label="Title"
-                    placeholder="Title"
-                    width={12}
-                    value={this.props.stateForm.title}
-                    name="title"
-                    onChange={handleChange}
-                  />
-                  <Form.Input
-                    label="Description"
-                    placeholder="Description"
-                    width={12}
-                    name="description"
-                    onChange={handleChange}
-                    value={this.props.stateForm.description}
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Input
-                    input="file"
-                    label="Image"
-                    width={12}
-                    name="image"
-                    onChange={handleUploadFile}
-                  />
-                  <Form.Input
-                    label="Price"
-                    placeholder="Price"
-                    width={12}
-                    name="price"
-                    onChange={handleChange}
-                    value={this.props.stateForm.price}
-                  />
-                </Form.Group>
-                <CustomMessage
-                  loading={this.props.stateForm.loading}
-                  message={this.props.stateForm.message}
-                />
-                <br />
-                <Button type="submit" disabled={this.props.stateForm.success}>
-                  Edit Item
-                </Button>
-              </Form>
-            </ContentForm>
-          </Container>
+      <User>
+        {({data: {me}}) => (
+          <Mutation mutation={UPDATE_ITEM} variables={this.props.stateForm}>
+            {updateItem => (
+              <Container>
+                <ContentForm className="shadow-depth-1">
+                  <Form
+                    id="form"
+                    method="POST"
+                    error={this.props.stateForm.error}
+                    success={this.props.stateForm.success}
+                    loading={this.props.stateForm.loading}
+                    onSubmit={e => handleSubmit(e, updateItem)}
+                  >
+                    <Form.Group>
+                      <Form.Input
+                        label="Title"
+                        placeholder="Title"
+                        width={12}
+                        value={this.props.stateForm.title}
+                        name="title"
+                        onChange={handleChange}
+                      />
+                      <Form.Input
+                        label="Description"
+                        placeholder="Description"
+                        width={12}
+                        name="description"
+                        onChange={handleChange}
+                        value={this.props.stateForm.description}
+                      />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Input
+                        input="file"
+                        label="Image"
+                        width={12}
+                        name="image"
+                        onChange={handleUploadFile}
+                      />
+                      <Form.Input
+                        label="Price"
+                        placeholder="Price"
+                        width={12}
+                        name="price"
+                        onChange={handleChange}
+                        value={this.props.stateForm.price}
+                      />
+                    </Form.Group>
+                    <CustomMessage
+                      loading={this.props.stateForm.loading}
+                      message={this.props.stateForm.message}
+                    />
+                    <br />
+                    <Button
+                      type="submit"
+                      disabled={this.props.stateForm.success}
+                    >
+                      Edit Item
+                    </Button>
+                  </Form>
+                </ContentForm>
+              </Container>
+            )}
+          </Mutation>
         )}
-      </Mutation>
+      </User>
     )
   }
 }

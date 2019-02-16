@@ -3,8 +3,9 @@ import gql from 'graphql-tag'
 import {graphql, Mutation, compose} from 'react-apollo'
 import {Button, Container, Form, Item} from 'semantic-ui-react'
 
+import {ITEMS_BY_USER} from './ItemsByUser'
 import {ITEMS} from './Items'
-import {PAGINATION_QUERY} from './Items'
+import {PAGINATION_QUERY} from './ItemsByUser'
 import {CURRENT_USER_QUERY} from './User'
 import CustomMessage from './CustomMessage'
 import withForm from 'HOC/withForm'
@@ -39,6 +40,7 @@ function CreateItem({form, stateForm, data}) {
       refetchQueries={() => {
         return [
           {query: CURRENT_USER_QUERY},
+          {query: Items},
           {
             query: PAGINATION_QUERY,
             variables: {
@@ -46,7 +48,7 @@ function CreateItem({form, stateForm, data}) {
             }
           },
           {
-            query: ITEMS,
+            query: ITEMS_BY_USER,
             variables: {
               username: data.me.username,
               skip: 0,
@@ -125,6 +127,9 @@ function CreateItem({form, stateForm, data}) {
 
 const CreateItemWithForm = withForm(CreateItem, 'createItem')
 
-export default graphql(CURRENT_USER_QUERY, ITEMS, PAGINATION_QUERY)(
-  CreateItemWithForm
-)
+export default graphql(
+  CURRENT_USER_QUERY,
+  ITEMS_BY_USER,
+  PAGINATION_QUERY,
+  ITEMS
+)(CreateItemWithForm)

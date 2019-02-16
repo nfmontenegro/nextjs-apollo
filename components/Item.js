@@ -12,6 +12,8 @@ import {
   Loader
 } from 'semantic-ui-react'
 
+import User from './User'
+
 import ProfileName from './styles/ProfileName'
 import ButtonEditProfile from './styles/ButtonEditProfile'
 import ProfileDescription from './styles/ProfileDescription'
@@ -83,61 +85,70 @@ class Item extends React.Component {
 
   render() {
     return (
-      <Query
-        query={GET_ITEM}
-        variables={{
-          id: this.props.router.query.id || ''
-        }}
-      >
-        {({data, loading}) => {
-          return (
-            <Container style={{marginTop: '100px'}}>
-              {loading ? (
-                <Segment>
-                  <Dimmer active inverted>
-                    <Loader size="large">Loading</Loader>
-                  </Dimmer>
+      <User>
+        {({data: {me}}) => (
+          <Query
+            query={GET_ITEM}
+            variables={{
+              id: this.props.router.query.id || ''
+            }}
+          >
+            {({data, loading}) => {
+              return (
+                <Container style={{marginTop: '100px'}}>
+                  {loading ? (
+                    <Segment>
+                      <Dimmer active inverted>
+                        <Loader size="large">Loading</Loader>
+                      </Dimmer>
 
-                  <Image src="https://react.semantic-ui.com/images/wireframe/paragraph.png" />
-                </Segment>
-              ) : (
-                <Card className="profile-card shadow-depth-1">
-                  <Grid>
-                    <Grid.Column width={5}>
-                      <Image
-                        src={
-                          data.item
-                            ? data.item.urlImage
-                            : 'https://react.semantic-ui.com/images/wireframe/image.png'
-                        }
-                      />
-                    </Grid.Column>
-                    {data.item && (
-                      <>
-                        <Grid.Column width={6}>
-                          <ProfileName>
-                            {data.item.title.toUpperCase()}
-                          </ProfileName>
-                          <ButtonEditProfile
-                            onClick={() =>
-                              this.renderEditItem(this.props.router.query.id)
-                            }
-                          >
-                            EDIT ITEM
-                          </ButtonEditProfile>
-                        </Grid.Column>
+                      <Image src="https://react.semantic-ui.com/images/wireframe/paragraph.png" />
+                    </Segment>
+                  ) : (
+                    <Card className="profile-card shadow-depth-1">
+                      <Grid>
                         <Grid.Column width={5}>
-                          {this.profileDescription(data)}
+                          <Image
+                            src={
+                              data.item
+                                ? data.item.urlImage
+                                : 'https://react.semantic-ui.com/images/wireframe/image.png'
+                            }
+                          />
                         </Grid.Column>
-                      </>
-                    )}
-                  </Grid>
-                </Card>
-              )}
-            </Container>
-          )
-        }}
-      </Query>
+                        {data.item && (
+                          <>
+                            <Grid.Column width={6}>
+                              <ProfileName>
+                                {data.item.title.toUpperCase()}
+                              </ProfileName>
+                              {me &&
+                                me.username === data.item.user.username && (
+                                  <ButtonEditProfile
+                                    onClick={() =>
+                                      this.renderEditItem(
+                                        this.props.router.query.id
+                                      )
+                                    }
+                                  >
+                                    EDIT ITEM
+                                  </ButtonEditProfile>
+                                )}
+                            </Grid.Column>
+                            <Grid.Column width={5}>
+                              {this.profileDescription(data)}
+                            </Grid.Column>
+                          </>
+                        )}
+                      </Grid>
+                    </Card>
+                  )}
+                </Container>
+              )
+            }}
+          </Query>
+        )}
+      </User>
     )
   }
 }

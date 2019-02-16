@@ -1,15 +1,10 @@
 import React from 'react'
 import gql from 'graphql-tag'
-import sortBy from 'lodash.sortby'
-import {Mutation, Query} from 'react-apollo'
+import {Query} from 'react-apollo'
 import Router, {withRouter} from 'next/router'
-import {Card, Container, Icon, Grid, Image} from 'semantic-ui-react'
+import {Button, Card, Container, Icon, Grid, Image} from 'semantic-ui-react'
 
-import User from './User'
-import Pagination from './Pagination'
-import {timeout} from 'async'
-
-const ITEMS = gql`
+export const ITEMS = gql`
   query allItems {
     allItems {
       id
@@ -36,7 +31,14 @@ const ITEMS = gql`
 `
 
 class Items extends React.Component {
-  state = {}
+  itemsDetails = itemId => {
+    Router.push({
+      pathname: '/item',
+      query: {
+        id: itemId
+      }
+    })
+  }
 
   render() {
     return (
@@ -50,31 +52,40 @@ class Items extends React.Component {
                   <Grid.Row>
                     {allItems.map(item => {
                       return (
-                        <>
-                          <Grid.Column>
-                            <Card key={item.id}>
-                              <Image src={item.urlImage} />
-                              <Card.Content>
-                                <Card.Header>{item.title}</Card.Header>
-                                <Card.Meta>
-                                  <span className="date">
-                                    {item.parseDate &&
-                                      `Joined in ${item.parseDate}`}
-                                  </span>
-                                </Card.Meta>
-                                <Card.Description>
-                                  {item.Description}
-                                </Card.Description>
-                              </Card.Content>
-                              <Card.Content extra>
-                                <a>
-                                  <Icon name="user" />
-                                  {item.price}
-                                </a>
-                              </Card.Content>
-                            </Card>
-                          </Grid.Column>
-                        </>
+                        <Grid.Column key={item.id}>
+                          <Card fluid color="orange" className="margin-card">
+                            <Image src={item.urlImage} className="item-image" />
+                            <Card.Content>
+                              <Card.Header>{item.title}</Card.Header>
+                              <Card.Meta>
+                                <span className="date">
+                                  {item.parseDate &&
+                                    `Joined in ${item.parseDate}`}
+                                </span>
+                              </Card.Meta>
+                              <Card.Meta>
+                                <span className="date">
+                                  {item.user.username}
+                                </span>
+                              </Card.Meta>
+                              <Card.Description>
+                                {item.description}
+                              </Card.Description>
+                              <Card.Description>
+                                <Icon name="dollar sign" />
+                                {item.price}
+                              </Card.Description>
+                            </Card.Content>
+                            <Card.Content extra>
+                              <Button
+                                onClick={() => this.itemsDetails(item.id)}
+                                style={{width: '100%'}}
+                              >
+                                View
+                              </Button>
+                            </Card.Content>
+                          </Card>
+                        </Grid.Column>
                       )
                     })}
                   </Grid.Row>
