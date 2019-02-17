@@ -2,13 +2,13 @@ import Link from 'next/link'
 
 import ContentPagination from './styles/ContentPagination'
 
-function Pagination({page, pages, count}) {
+function Pagination({page, pages, count, path}) {
   return (
     <ContentPagination>
       <Link
         prefetch
         href={{
-          pathname: 'items',
+          pathname: path,
           query: {page: page - 1}
         }}
       >
@@ -24,7 +24,7 @@ function Pagination({page, pages, count}) {
       <Link
         prefetch
         href={{
-          pathname: 'items',
+          pathname: path,
           query: {page: parseInt(page) + 1}
         }}
       >

@@ -16,7 +16,7 @@ class Nav extends React.Component {
             <>
               <Menu fixed="top" className="shadow-depth-1">
                 <Menu.Item>
-                  <Link href="/">
+                  <Link href="/home?page=1">
                     <Image
                       style={{cursor: 'pointer'}}
                       size="mini"

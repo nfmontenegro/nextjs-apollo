@@ -4,9 +4,12 @@ import {Query} from 'react-apollo'
 import Router, {withRouter} from 'next/router'
 import {Button, Card, Container, Icon, Grid, Image} from 'semantic-ui-react'
 
+import Pagination from './Pagination'
+import {PAGINATION_QUERY} from './ItemsByUser'
+
 export const ITEMS = gql`
-  query allItems {
-    allItems {
+  query items($skip: Int, $first: Int) {
+    items(where: {}, skip: $skip, first: $first) {
       id
       title
       description
@@ -40,8 +43,8 @@ class Items extends React.Component {
     })
   }
 
-  renderITems = allItems =>
-    allItems.map(item => {
+  renderITems = items =>
+    items.map(item => {
       return (
         <Grid.Column key={item.id}>
           <Card fluid color="orange" className="margin-card">
@@ -76,23 +79,47 @@ class Items extends React.Component {
     })
 
   render() {
+    const page = this.props.router.query.page
     return (
-      <Query query={ITEMS}>
-        {({data: {allItems}, loading}) => {
+      <Query
+        query={ITEMS}
+        variables={{
+          skip: page * 6 - 6,
+          first: 6
+        }}
+      >
+        {({data: {items}, loading}) => {
           if (loading) return 'Loading...'
-          {
-            return allItems.length > 0 ? (
-              <Container>
-                <Grid columns={3} divided>
-                  <Grid.Row>{this.renderItems(allitems)}</Grid.Row>
-                </Grid>
-              </Container>
-            ) : (
-              <Header as="h1" textAlign="center" color="blue">
-                No items published ☹️
-              </Header>
-            )
-          }
+
+          return items.length > 0 ? (
+            <Container>
+              <Grid columns={3} divided>
+                <Grid.Row>{this.renderITems(items)}</Grid.Row>
+              </Grid>
+              <Query query={PAGINATION_QUERY}>
+                {({data, loading}) => {
+                  if (loading) return 'Loading...'
+                  console.log('Data:', data)
+                  const count = data.itemsConnection.aggregate.count
+                  const pages = Math.ceil(count / 6)
+                  return (
+                    <div style={{textAlign: 'center'}}>
+                      <Pagination
+                        page={page}
+                        pages={pages}
+                        count={count}
+                        path="home"
+                      />
+                    </div>
+                  )
+                }}
+              </Query>
+            </Container>
+          ) : (
+            <Header as="h1" textAlign="center" color="blue">
+              No items published
+            </Header>
+          )
         }}
       </Query>
     )

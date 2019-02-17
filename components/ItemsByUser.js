@@ -23,7 +23,7 @@ const DELETE_ITEM_BY_USER = gql`
 `
 
 export const PAGINATION_QUERY = gql`
-  query paginationQuery($username: String!) {
+  query paginationQuery($username: String) {
     itemsConnection(where: {user: {username: $username}}) {
       aggregate {
         count
@@ -209,6 +209,7 @@ class ItemsByUser extends React.Component {
                                 page={page}
                                 pages={pages}
                                 count={count}
+                                path="items"
                               />
                             )
                           }}
@@ -217,7 +218,7 @@ class ItemsByUser extends React.Component {
                     </ContentTable>
                   ) : (
                     <Header as="h1" textAlign="center" color="blue">
-                      No items published ☹️
+                      No items published 🤔
                     </Header>
                   )}
                 </>
