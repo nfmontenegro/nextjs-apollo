@@ -1,8 +1,8 @@
 import React from 'react'
 import gql from 'graphql-tag'
 import Router from 'next/router'
-import {withApollo, Mutation} from 'react-apollo'
 import {toast} from 'react-toastify'
+import {withApollo, Mutation} from 'react-apollo'
 
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -21,8 +21,8 @@ async function handleSignout(e, signout, client) {
   client.resetStore()
   toast.info('Bye ✋🏻', {
     onClose: async () => {
-      Router.push('/')
       await signout()
+      Router.push('/')
     }
   })
 }
@@ -30,17 +30,19 @@ async function handleSignout(e, signout, client) {
 const Signout = ({client}) => (
   <Mutation
     mutation={SIGN_OUT_MUTATION}
-    refetchQueries={[{query: CURRENT_USER_QUERY}]}
+    refetchQueries={[
+      {
+        query: CURRENT_USER_QUERY
+      }
+    ]}
   >
     {signout => (
-      <>
-        <a
-          style={{cursor: 'pointer'}}
-          onClick={e => handleSignout(e, signout, client)}
-        >
-          Sign Out
-        </a>
-      </>
+      <a
+        style={{cursor: 'pointer'}}
+        onClick={e => handleSignout(e, signout, client)}
+      >
+        Sign Out
+      </a>
     )}
   </Mutation>
 )

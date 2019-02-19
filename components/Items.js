@@ -99,7 +99,6 @@ class Items extends React.Component {
               <Query query={PAGINATION_QUERY}>
                 {({data, loading}) => {
                   if (loading) return 'Loading...'
-                  console.log('Data:', data)
                   const count = data.itemsConnection.aggregate.count
                   const pages = Math.ceil(count / 6)
                   return (

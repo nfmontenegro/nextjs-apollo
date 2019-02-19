@@ -62,8 +62,14 @@ function UserProfile() {
   return (
     <User>
       {({data: {me}}) => (
-        <Query query={ITEMS_BY_USER} variables={{username: me.username}}>
+        <Query
+          query={ITEMS_BY_USER}
+          variables={{
+            username: me ? me.username : ''
+          }}
+        >
           {({data: {items}, loading}) => {
+            if (loading) return null
             return (
               <Container style={{marginTop: '100px'}}>
                 <Card className="profile-card shadow-depth-1">
