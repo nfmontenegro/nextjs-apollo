@@ -44,13 +44,13 @@ function CreateItem({form, stateForm, data}) {
           {
             query: PAGINATION_QUERY,
             variables: {
-              username: data.me.username
+              username: data.me ? data.me.username : ''
             }
           },
           {
             query: ITEMS_BY_USER,
             variables: {
-              username: data.me.username,
+              username: data.me ? data.me.username : '',
               skip: 0,
               first: 10
             }
@@ -107,7 +107,11 @@ function CreateItem({form, stateForm, data}) {
                   onChange={form.handleChange}
                   value={stateForm.price}
                 />
-                <Form.Input type="hidden" required value={data.me.username} />
+                <Form.Input
+                  type="hidden"
+                  required
+                  value={data.me ? data.me.username : ''}
+                />
               </Form.Group>
               <CustomMessage
                 loading={stateForm.loading}

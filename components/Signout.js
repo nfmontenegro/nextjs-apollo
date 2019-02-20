@@ -20,9 +20,11 @@ async function handleSignout(e, signout, client) {
   e.preventDefault()
   client.resetStore()
   toast.info('Bye ✋🏻', {
+    onOpen: () => {
+      Router.push('/home?page=1')
+    },
     onClose: async () => {
       await signout()
-      Router.push('/')
     }
   })
 }

@@ -83,7 +83,7 @@ class EditUserProfile extends React.Component {
                     <ProfileName size="48px" align="center" marginTop="40px">
                       Settings for{' '}
                       <span style={{backgroundColor: '#fefa87'}}>
-                        @{me.username}
+                        @{me ? me.username : ''}
                       </span>
                     </ProfileName>
                     <ContentForm className="shadow-depth-1">

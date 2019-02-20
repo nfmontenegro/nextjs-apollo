@@ -4,7 +4,7 @@ import {CURRENT_USER_QUERY} from './User'
 const PleaseSignin = props => (
   <Query query={CURRENT_USER_QUERY}>
     {({data, loading}) => {
-      if (loading) return <p>Loading...</p>
+      if (loading) return null
       if (!data.me) {
         return (
           <div>
